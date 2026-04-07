@@ -112,9 +112,22 @@ return [
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
+         'sigh' => [
+    'driver' => 'sqlsrv',
+    'host' => env('SIGH_HOST', 'localhost'),
+    'port' => env('SIGH_PORT', '1433'),
+    'database' => env('SIGH_DATABASE', 'SIGH'),
+    'username' => env('SIGH_USERNAME', ''),
+    'password' => env('SIGH_PASSWORD', ''),
+    'charset' => 'utf8',
+    'prefix' => '',
+    'prefix_indexes' => true,
+    'encrypt' => env('DB_ENCRYPT', 'no'),
+    'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'true'),
+],
+        ],
 
-    ],
-
+    
     /*
     |--------------------------------------------------------------------------
     | Migration Repository Table

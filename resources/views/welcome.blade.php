@@ -364,11 +364,11 @@
             <div class="actions">
                 @if (Route::has('login'))
                     @auth
-                        <a class="btn btn-primary" href="{{ url('/dashboard') }}">
+                        <a class="btn btn-primary" href="{{ url('/home') }}">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                 <path d="M4 13h7V4H4v9zm0 7h7v-5H4v5zm9 0h7V11h-7v9zm0-18v7h7V2h-7z" fill="rgba(234,243,248,.9)"/>
                             </svg>
-                            Ir al Dashboard
+                            Ir al Home
                         </a>
                     @else
                         <a class="btn btn-primary" href="{{ route('login') }}">

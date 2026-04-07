@@ -1,170 +1,176 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-<title>{{ config('app.name', 'Hospital Belén de Trujillo') }}</title>
+    <title>{{ config('app.name', 'Hospital Belén de Trujillo') }}</title>
 
-<link rel="dns-prefetch" href="//fonts.bunny.net">
-<link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
-@vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-<style>
+    <style>
+        body {
+            background: #061218;
+            color: #eaf3f8;
+        }
 
-body{
-background:#061218;
-color:#eaf3f8;
-}
+        .or-navbar {
+            background: linear-gradient(90deg, #061218, #0a1d28);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+        }
 
-.or-navbar{
-background: linear-gradient(90deg,#061218,#0a1d28);
-border-bottom:1px solid rgba(255,255,255,.08);
-}
+        .or-navbar .navbar-brand {
+            color: #2bd4c5;
+            font-weight: 700;
+        }
 
-.or-navbar .navbar-brand{
-color:#2bd4c5;
-font-weight:700;
-}
+        .or-navbar .navbar-brand:hover {
+            color: #39d98a;
+        }
 
-.or-navbar .navbar-brand:hover{
-color:#39d98a;
-}
+        .or-navbar .nav-link {
+            color: rgba(234, 243, 248, .8);
+            font-size: 14px;
+        }
 
-.or-navbar .nav-link{
-color:rgba(234,243,248,.8);
-font-size:14px;
-}
+        .or-navbar .nav-link:hover {
+            color: #2bd4c5;
+        }
 
-.or-navbar .nav-link:hover{
-color:#2bd4c5;
-}
+        .or-navbar .dropdown-menu {
+            background: #0a1d28;
+            border: 1px solid rgba(255, 255, 255, .08);
+        }
 
-.or-navbar .dropdown-menu{
-background:#0a1d28;
-border:1px solid rgba(255,255,255,.08);
-}
+        .or-navbar .dropdown-item {
+            color: #eaf3f8;
+        }
 
-.or-navbar .dropdown-item{
-color:#eaf3f8;
-}
-
-.or-navbar .dropdown-item:hover{
-background:#102c3a;
-color:#2bd4c5;
-}
-
-</style>
+        .or-navbar .dropdown-item:hover {
+            background: #102c3a;
+            color: #2bd4c5;
+        }
+    </style>
 
 </head>
 
 <body>
 
-<div id="app">
+    <div id="app">
 
-{{-- OCULTAR NAVBAR EN LOGIN Y REGISTER --}}
-@if (!request()->routeIs('login') && !request()->routeIs('register'))
+        {{-- OCULTAR NAVBAR EN LOGIN Y REGISTER --}}
+        @if (!request()->routeIs('login') && !request()->routeIs('register'))
 
-<nav class="navbar navbar-expand-md or-navbar shadow-sm">
+        <nav class="navbar navbar-expand-md or-navbar shadow-sm">
 
-<div class="container">
+            <div class="container">
 
-<a class="navbar-brand" href="{{ url('/home') }}">
-🏥 HOSPITAL BELÉN
-</a>
+                <a href="{{ url('/home') }}" class="navbar-brand d-flex align-items-center">
+                    <img src="{{ asset('img/logo.png') }}"
+                        alt="Logo"
+                        style="height:35px; margin-right:10px;">
 
-<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-data-bs-target="#navbarSupportedContent">
+                    <span style="font-weight:800; color:#2bd4c5;">
+                        HOSPITAL BELÉN DE TRUJILLO
+                    </span>
+                </a>
 
-<span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent">
 
-</button>
+                    <span class="navbar-toggler-icon"></span>
 
-<div class="collapse navbar-collapse" id="navbarSupportedContent">
+                </button>
 
-<ul class="navbar-nav me-auto">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-<li class="nav-item">
-<a class="nav-link" href="/home">Dashboard</a>
-</li>
+                    <ul class="navbar-nav me-auto">
 
-</ul>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/home">Dashboard</a>
+                        </li>
 
-<ul class="navbar-nav ms-auto">
+                    </ul>
 
-@guest
+                    <ul class="navbar-nav ms-auto">
 
-@if (Route::has('login'))
-<li class="nav-item">
-<a class="nav-link" href="{{ route('login') }}">Login</a>
-</li>
-@endif
+                        @guest
 
-@if (Route::has('register'))
-<li class="nav-item">
-<a class="nav-link" href="{{ route('register') }}">Register</a>
-</li>
-@endif
+                        @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+                        @endif
 
-@else
+                        @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        </li>
+                        @endif
 
-<li class="nav-item dropdown">
+                        @else
 
-<a id="navbarDropdown"
-class="nav-link dropdown-toggle"
-href="#"
-role="button"
-data-bs-toggle="dropdown"
-v-pre>
+                        <li class="nav-item dropdown">
 
-{{ Auth::user()->name }}
+                            <a id="navbarDropdown"
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                v-pre>
 
-</a>
+                                {{ Auth::user()->name }}
 
-<div class="dropdown-menu dropdown-menu-end">
+                            </a>
 
-<a class="dropdown-item"
-href="{{ route('logout') }}"
-onclick="event.preventDefault();
+                            <div class="dropdown-menu dropdown-menu-end">
+
+                                <a class="dropdown-item"
+                                    href="{{ route('logout') }}"
+                                    onclick="event.preventDefault();
 document.getElementById('logout-form').submit();">
 
-Logout
+                                    Logout
 
-</a>
+                                </a>
 
-<form id="logout-form"
-action="{{ route('logout') }}"
-method="POST"
-class="d-none">
+                                <form id="logout-form"
+                                    action="{{ route('logout') }}"
+                                    method="POST"
+                                    class="d-none">
 
-@csrf
+                                    @csrf
 
-</form>
+                                </form>
 
-</div>
+                            </div>
 
-</li>
+                        </li>
 
-@endguest
+                        @endguest
 
-</ul>
+                    </ul>
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</nav>
+        </nav>
 
-@endif
+        @endif
 
-<main class="py-4">
-@yield('content')
-</main>
+        <main class="py-4">
+            @yield('content')
+        </main>
 
-</div>
+    </div>
 
 </body>
+
 </html>
