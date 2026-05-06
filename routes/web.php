@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\DiagnosticoController;
 use App\Http\Controllers\Api\OperacionController;
 use App\Http\Controllers\Api\MedicoController;
 use App\Http\Controllers\EjecucionCirugiaController;
+use App\Http\Controllers\ReporteController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,4 +46,7 @@ Route::middleware('auth')->group(function () {
 
     Route::put('/ejecucion-cirugias/{id}/culminar', [EjecucionCirugiaController::class, 'culminar'])
         ->name('ejecucion-cirugias.culminar');
+    Route::get('/reportes', [ReporteController::class, 'index'])->name('reportes.index');
+    Route::get('/reportes/exportar/excel', [ReporteController::class, 'exportarExcel'])->name('reportes.exportar.excel');
+    Route::get('/reportes/exportar/pdf', [ReporteController::class, 'exportarPdf'])->name('reportes.exportar.pdf');
 });

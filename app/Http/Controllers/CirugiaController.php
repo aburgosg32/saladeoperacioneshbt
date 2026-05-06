@@ -4,20 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Models\Solicitud;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class CirugiaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $hoy = Carbon::today()->toDateString();
+        $fechaInicio = $request->fecha_inicio;
+        $fechaFin = $request->fecha_fin;
 
-        $cirugiasHoy = Solicitud::where(function ($q) use ($hoy) {
-            $q->whereDate('fecha_programada', $hoy)
-                ->orWhere(function ($sub) use ($hoy) {
+        $query = Solicitud::query();
+
+        if ($fechaInicio && $fechaFin) {
+            $query->where(function ($q) use ($fechaInicio, $fechaFin) {
+                $q->where(function ($sub) use ($fechaInicio, $fechaFin) {
                     $sub->where('estado', 'S')
-                        ->whereDate('para_el_dia', $hoy);
-                });
-        })
+                        ->whereDate('para_el_dia', '>=', $fechaInicio)
+                        ->whereDate('para_el_dia', '<=', $fechaFin);
+                })
+                    ->orWhere(function ($sub) use ($fechaInicio, $fechaFin) {
+                        $sub->where('estado', '!=', 'S')
+                            ->whereDate('fecha_programada', '>=', $fechaInicio)
+                            ->whereDate('fecha_programada', '<=', $fechaFin);
+                    });
+            });
+        } elseif ($fechaInicio) {
+            $query->where(function ($q) use ($fechaInicio) {
+                $q->where(function ($sub) use ($fechaInicio) {
+                    $sub->where('estado', 'S')
+                        ->whereDate('para_el_dia', '>=', $fechaInicio);
+                })
+                    ->orWhere(function ($sub) use ($fechaInicio) {
+                        $sub->where('estado', '!=', 'S')
+                            ->whereDate('fecha_programada', '>=', $fechaInicio);
+                    });
+            });
+        } elseif ($fechaFin) {
+            $query->where(function ($q) use ($fechaFin) {
+                $q->where(function ($sub) use ($fechaFin) {
+                    $sub->where('estado', 'S')
+                        ->whereDate('para_el_dia', '<=', $fechaFin);
+                })
+                    ->orWhere(function ($sub) use ($fechaFin) {
+                        $sub->where('estado', '!=', 'S')
+                            ->whereDate('fecha_programada', '<=', $fechaFin);
+                    });
+            });
+        }
+
+        $cirugiasHoy = $query
+            ->orderByRaw("COALESCE(fecha_programada, para_el_dia) DESC")
             ->orderBy('hora_programada', 'asc')
             ->get();
 
@@ -26,11 +62,20 @@ class CirugiaController extends Controller
         $enCurso = $cirugiasHoy->where('estado', 'E')->count();
         $culminadas = $cirugiasHoy->where('estado', 'C')->count();
         $solicitadas = $cirugiasHoy->where('estado', 'S')->count();
-        $emergencias = $cirugiasHoy->where('tipo_solicitud', 'EMERGENCIA')->count();
-        $salasOcupadas = $cirugiasHoy->pluck('sala_operacion')->filter()->unique()->count();
+
+        $emergencias = $cirugiasHoy
+            ->filter(fn($c) => strtoupper($c->tipo_solicitud ?? '') === 'EMERGENCIA')
+            ->count();
+
+        $salasOcupadas = $cirugiasHoy
+            ->pluck('sala_operacion')
+            ->filter()
+            ->unique()
+            ->count();
 
         $proximaCirugia = $cirugiasHoy
-            ->filter(fn($c) => !empty($c->hora_programada) && $c->estado === 'P')
+            ->filter(fn($c) => !empty($c->hora_programada) && in_array($c->estado, ['P', 'E']))
+            ->sortBy('hora_programada')
             ->first();
 
         return view('cirugias.index', compact(
@@ -42,7 +87,9 @@ class CirugiaController extends Controller
             'solicitadas',
             'emergencias',
             'salasOcupadas',
-            'proximaCirugia'
+            'proximaCirugia',
+            'fechaInicio',
+            'fechaFin'
         ));
     }
 
@@ -65,8 +112,16 @@ class CirugiaController extends Controller
         $enCurso = $cirugiasHoy->where('estado', 'E')->count();
         $culminadas = $cirugiasHoy->where('estado', 'C')->count();
         $solicitadas = $cirugiasHoy->where('estado', 'S')->count();
-        $emergencias = $cirugiasHoy->where('tipo_solicitud', 'EMERGENCIA')->count();
-        $salasOcupadas = $cirugiasHoy->pluck('sala_operacion')->filter()->unique()->count();
+
+        $emergencias = $cirugiasHoy
+            ->filter(fn($c) => strtoupper($c->tipo_solicitud ?? '') === 'EMERGENCIA')
+            ->count();
+
+        $salasOcupadas = $cirugiasHoy
+            ->pluck('sala_operacion')
+            ->filter()
+            ->unique()
+            ->count();
 
         $proximaCirugia = $cirugiasHoy
             ->filter(fn($c) => !empty($c->hora_programada) && $c->estado === 'P')

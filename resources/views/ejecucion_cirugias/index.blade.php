@@ -404,6 +404,7 @@
                             </td>
                             <td style="text-align:center;">
                                 <div class="qx-row-actions" style="justify-content:center;">
+                                    @can('ejecucion.iniciar')
                                     @if($c->estado === 'P')
                                     <form action="{{ route('ejecucion-cirugias.iniciar', $c->id) }}" method="POST" class="qx-form-inline" onsubmit="return confirm('¿Iniciar la operación #{{ $c->id }}?')">
                                         @csrf
@@ -411,7 +412,9 @@
                                         <button type="submit" class="qx-btn-sm qx-btn-start">Iniciar</button>
                                     </form>
                                     @endif
+                                    @endcan
 
+                                    @can('ejecucion.culminar')
                                     @if($c->estado === 'E')
                                     <form action="{{ route('ejecucion-cirugias.culminar', $c->id) }}" method="POST" class="qx-form-inline" onsubmit="return confirm('¿Culminar la operación #{{ $c->id }}?')">
                                         @csrf
@@ -419,6 +422,7 @@
                                         <button type="submit" class="qx-btn-sm qx-btn-finish">Culminar</button>
                                     </form>
                                     @endif
+                                    @endcan
                                 </div>
                             </td>
                         </tr>

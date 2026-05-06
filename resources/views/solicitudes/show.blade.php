@@ -101,6 +101,8 @@
                 <span class="or-value">
                     @if($solicitud->estado == 'P')
                     Programado
+                    @elseif($solicitud->estado == 'E')
+                    En curso
                     @elseif($solicitud->estado == 'C')
                     Culminado
                     @else
@@ -223,6 +225,20 @@
                 <div>
                     <span class="or-label">Sala de Operación</span>
                     <span class="or-value">{{ $solicitud->sala_operacion ?? '-' }}</span>
+                </div>
+            </div>
+            {{-- INICIO DE OPERACIÓN --}}
+            <div class="or-section">
+                <div class="or-section-title">Inicio de Operación</div>
+
+                <div>
+                    <span class="or-label">Fecha Inicio</span>
+                    <span class="or-value">{{ $solicitud->fecha_inicio ? date('d/m/Y', strtotime($solicitud->fecha_inicio)) : '-' }}</span>
+                </div>
+
+                <div>
+                    <span class="or-label">Hora Inicio</span>
+                    <span class="or-value">{{ $solicitud->hora_inicio ? date('H:i', strtotime($solicitud->hora_inicio)) : '-' }}</span>
                 </div>
             </div>
 

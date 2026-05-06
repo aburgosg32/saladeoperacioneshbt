@@ -406,6 +406,12 @@
         opacity: .45;
         cursor: not-allowed;
     }
+
+    .or-state-e {
+        background: rgba(155, 123, 255, .12);
+        color: #c7b5ff;
+        border-color: rgba(155, 123, 255, .30);
+    }
 </style>
 
 <div class="or-page">
@@ -421,9 +427,11 @@
 
             <div class="or-actions">
                 <a class="or-btn" href="{{ url('/home') }}">Dashboard</a>
+                @can('solicitudes.crear')
                 <a class="or-btn or-btn-primary" href="{{ route('solicitudes.create') }}">
                     Nueva Solicitud
                 </a>
+                @endcan
             </div>
         </div>
 
@@ -477,6 +485,8 @@
                             <td class="text-center">
                                 @if($s->estado === 'P')
                                 <span class="or-state-badge or-state-a">Programado</span>
+                                @elseif($s->estado === 'E')
+                                <span class="or-state-badge or-state-e">En curso</span>
                                 @elseif($s->estado === 'C')
                                 <span class="or-state-badge or-state-c">Culminado</span>
                                 @else
@@ -540,12 +550,14 @@
                                         👁
                                     </a>
 
+                                    @can('solicitudes.editar')
                                     <a class="or-icon-btn"
                                         href="{{ route('solicitudes.edit', $s) }}"
                                         title="Editar">
                                         ✏️
                                     </a>
-
+                                    @endcan
+                                    @can('ejecucion.culminar')
                                     @if($s->estado === 'P')
                                     <a class="or-icon-btn"
                                         href="{{ route('solicitudes.culminar', $s->id) }}"
@@ -553,7 +565,9 @@
                                         ✅
                                     </a>
                                     @endif
+                                    @endcan
 
+                                    @can('solicitudes.eliminar')
                                     <form method="POST"
                                         action="{{ route('solicitudes.destroy', $s) }}"
                                         onsubmit="return confirm('¿Eliminar solicitud #{{ $s->id }}?')"
@@ -567,6 +581,7 @@
                                             🗑
                                         </button>
                                     </form>
+                                    @endcan
                                 </div>
                             </td>
                         </tr>
@@ -589,4 +604,9 @@
         </div>
     </div>
 </div>
+<script>
+    setTimeout(function() {
+        location.reload();
+    }, 10000); // cada 10 segundos
+</script>
 @endsection

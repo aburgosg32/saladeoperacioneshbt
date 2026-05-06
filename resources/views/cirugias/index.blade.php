@@ -74,6 +74,7 @@
         font-size: 12.5px;
         font-weight: 800;
         transition: .2s ease;
+        cursor: pointer;
     }
 
     .cx-btn:hover {
@@ -87,6 +88,55 @@
     .cx-btn-primary {
         background: linear-gradient(135deg, rgba(43, 212, 197, .20), rgba(27, 179, 242, .20));
         border-color: rgba(43, 212, 197, .28);
+    }
+
+    .cx-filter {
+        margin-bottom: 18px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background:
+            radial-gradient(700px 240px at 18% 20%, rgba(43, 212, 197, .08), transparent 55%),
+            linear-gradient(180deg, rgba(12, 40, 56, .66), rgba(12, 40, 56, .34));
+        box-shadow: var(--shadow);
+        padding: 14px 16px;
+    }
+
+    .cx-filter-form {
+        display: flex;
+        align-items: end;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .cx-filter-group {
+        display: grid;
+        gap: 6px;
+    }
+
+    .cx-filter-group label {
+        color: var(--muted);
+        font-size: 11.5px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin: 0;
+    }
+
+    .cx-input {
+        min-width: 170px;
+        padding: 10px 12px;
+        border-radius: 13px;
+        border: 1px solid var(--line);
+        background: rgba(6, 18, 24, .50);
+        color: var(--text);
+        outline: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .cx-input:focus {
+        border-color: rgba(43, 212, 197, .45);
+        box-shadow: 0 0 0 3px rgba(43, 212, 197, .10);
     }
 
     .cx-grid-kpi {
@@ -251,7 +301,7 @@
     .cx-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 1080px;
+        min-width: 1160px;
     }
 
     .cx-table th,
@@ -433,9 +483,29 @@
 @php
 $solicitadas = (int) $solicitadas;
 
-$cirugiasOrdenadas = collect($cirugiasHoy)->sortBy('hora_programada')->values();
+$textoFiltro = 'Todos los registros';
+if (!empty($fechaInicio) && !empty($fechaFin)) {
+$textoFiltro = 'Del ' . \Carbon\Carbon::parse($fechaInicio)->format('d/m/Y') . ' al ' . \Carbon\Carbon::parse($fechaFin)->format('d/m/Y');
+} elseif (!empty($fechaInicio)) {
+$textoFiltro = 'Desde ' . \Carbon\Carbon::parse($fechaInicio)->format('d/m/Y');
+} elseif (!empty($fechaFin)) {
+$textoFiltro = 'Hasta ' . \Carbon\Carbon::parse($fechaFin)->format('d/m/Y');
+}
 
-$proximas = $cirugiasOrdenadas->take(5);
+$fechaMostrar = function ($c) {
+$fecha = $c->estado === 'S' ? $c->para_el_dia : $c->fecha_programada;
+return $fecha ? \Carbon\Carbon::parse($fecha)->format('d/m/Y') : '-';
+};
+
+$cirugiasOrdenadas = collect($cirugiasHoy)
+->sortBy(function ($c) {
+return ($c->estado === 'S' ? $c->para_el_dia : $c->fecha_programada) . ' ' . ($c->hora_programada ?? '99:99:99');
+})
+->values();
+
+$proximas = $cirugiasOrdenadas
+->filter(fn($c) => in_array($c->estado, ['P', 'E', 'S']))
+->take(5);
 
 $cirugiasEmergencia = collect($cirugiasHoy)->filter(function ($c) {
 return strtoupper($c->tipo_solicitud ?? '') === 'EMERGENCIA';
@@ -476,23 +546,45 @@ $estadoSolicitado = (int) $solicitadas;
 
         <div class="cx-head">
             <div>
-                <h1 class="cx-title">Panel de Cirugías</h1>
-                <p class="cx-sub">Resumen operativo, visual y estadístico de las cirugías programadas para hoy.</p>
+                <h1 class="cx-title">Panel de Control de Cirugías</h1>
+                <p class="cx-sub">Resumen operativo, visual y estadístico de todos los registros quirúrgicos.</p>
             </div>
 
             <div class="cx-top-actions">
                 <a class="cx-btn" href="{{ url('/home') }}">Dashboard</a>
+                <a class="cx-btn" href="{{ route('cirugias.panel_tv') }}">Panel TV</a>
                 <a class="cx-btn cx-btn-primary" href="javascript:void(0)" onclick="window.print()">Imprimir</a>
             </div>
         </div>
 
+        <div class="cx-filter">
+            <form method="GET" action="{{ route('cirugias.index') }}" class="cx-filter-form">
+                <div class="cx-filter-group">
+                    <label>Fecha inicio</label>
+                    <input class="cx-input" type="date" name="fecha_inicio" value="{{ $fechaInicio ?? '' }}">
+                </div>
+
+                <div class="cx-filter-group">
+                    <label>Fecha fin</label>
+                    <input class="cx-input" type="date" name="fecha_fin" value="{{ $fechaFin ?? '' }}">
+                </div>
+
+                <button type="submit" class="cx-btn cx-btn-primary">Filtrar</button>
+                <a href="{{ route('cirugias.index') }}" class="cx-btn">Ver todo</a>
+
+                <div class="cx-count">
+                    {{ $textoFiltro }}
+                </div>
+            </form>
+        </div>
+
         <div class="cx-grid-kpi">
             <div class="cx-card">
-                <div class="cx-card-label">Total hoy</div>
+                <div class="cx-card-label">Total registros</div>
                 <div class="cx-card-value">{{ $totalHoy }}</div>
-                <div class="cx-card-note">Cirugías con fecha programada hoy</div>
+                <div class="cx-card-note">Cirugías registradas según el filtro aplicado</div>
                 <div class="cx-card-mini">
-                    <span class="cx-dot blue"></span> Agenda quirúrgica diaria
+                    <span class="cx-dot blue"></span> Resumen histórico
                 </div>
             </div>
 
@@ -519,7 +611,7 @@ $estadoSolicitado = (int) $solicitadas;
                 <div class="cx-card-value">{{ $culminadas }}</div>
                 <div class="cx-card-note">Registradas como finalizadas</div>
                 <div class="cx-card-mini">
-                    <span class="cx-dot blue"></span> Avance del día
+                    <span class="cx-dot blue"></span> Producción quirúrgica
                 </div>
             </div>
 
@@ -533,9 +625,9 @@ $estadoSolicitado = (int) $solicitadas;
             </div>
 
             <div class="cx-card">
-                <div class="cx-card-label">Salas ocupadas</div>
+                <div class="cx-card-label">Salas utilizadas</div>
                 <div class="cx-card-value">{{ $salasOcupadas }}</div>
-                <div class="cx-card-note">Salas distintas en uso hoy</div>
+                <div class="cx-card-note">Salas distintas registradas</div>
                 <div class="cx-card-mini">
                     <span class="cx-dot yellow"></span> Capacidad utilizada
                 </div>
@@ -560,7 +652,7 @@ $estadoSolicitado = (int) $solicitadas;
             <div class="cx-panel">
                 <div class="cx-panel-head">
                     <div class="cx-panel-title">Distribución por estado</div>
-                    <div class="cx-count">Hoy: {{ $totalHoy }} intervenciones</div>
+                    <div class="cx-count">Total: {{ $totalHoy }} intervenciones</div>
                 </div>
                 <div class="cx-panel-body">
                     <div class="cx-chart-box">
@@ -572,11 +664,11 @@ $estadoSolicitado = (int) $solicitadas;
             <div class="cx-panel">
                 <div class="cx-panel-head">
                     <div class="cx-panel-title">Resumen ejecutivo</div>
-                    <div class="cx-count">Corte actual</div>
+                    <div class="cx-count">{{ $textoFiltro }}</div>
                 </div>
                 <div class="cx-panel-body">
                     <div class="cx-stat-line">
-                        <span class="cx-muted">Avance quirúrgico del día</span>
+                        <span class="cx-muted">Avance quirúrgico general</span>
                         <span class="cx-strong">{{ $ocupacionPct }}%</span>
                     </div>
                     <div class="cx-progress">
@@ -601,17 +693,17 @@ $estadoSolicitado = (int) $solicitadas;
                     </div>
 
                     <div class="cx-stat-line">
-                        <span class="cx-muted">Solicitudes sin cerrar</span>
+                        <span class="cx-muted">Solicitudes pendientes</span>
                         <span class="cx-strong">{{ $solicitadas }}</span>
                     </div>
 
                     <div class="cx-stat-line">
-                        <span class="cx-muted">Emergencias del día</span>
+                        <span class="cx-muted">Emergencias registradas</span>
                         <span class="cx-strong">{{ $emergencias }}</span>
                     </div>
 
                     <div class="cx-stat-line" style="margin-bottom:0;">
-                        <span class="cx-muted">Salas activas</span>
+                        <span class="cx-muted">Salas utilizadas</span>
                         <span class="cx-strong">{{ $salasOcupadas }}</span>
                     </div>
                 </div>
@@ -654,6 +746,7 @@ $estadoSolicitado = (int) $solicitadas;
                         <div class="cx-item">
                             <div class="cx-item-top">
                                 <div class="cx-item-title">
+                                    {{ $fechaMostrar($p) }} -
                                     {{ $p->hora_programada ? \Carbon\Carbon::parse($p->hora_programada)->format('H:i') : '-' }}
                                 </div>
                                 <span class="cx-badge">
@@ -676,7 +769,7 @@ $estadoSolicitado = (int) $solicitadas;
         <div class="cx-row">
             <div class="cx-panel">
                 <div class="cx-panel-head">
-                    <div class="cx-panel-title">Operaciones del día</div>
+                    <div class="cx-panel-title">Operaciones registradas</div>
                     <div class="cx-count">Total: {{ $totalHoy }}</div>
                 </div>
 
@@ -684,6 +777,7 @@ $estadoSolicitado = (int) $solicitadas;
                     <table class="cx-table">
                         <thead>
                             <tr>
+                                <th>Fecha</th>
                                 <th>Hora</th>
                                 <th>Sala</th>
                                 <th>Tipo</th>
@@ -696,6 +790,7 @@ $estadoSolicitado = (int) $solicitadas;
                         <tbody>
                             @forelse($cirugiasHoy as $c)
                             <tr>
+                                <td>{{ $fechaMostrar($c) }}</td>
                                 <td>
                                     {{ $c->hora_programada ? \Carbon\Carbon::parse($c->hora_programada)->format('H:i') : '-' }}
                                 </td>
@@ -728,8 +823,8 @@ $estadoSolicitado = (int) $solicitadas;
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" class="cx-empty">
-                                    No hay cirugías programadas para hoy.
+                                <td colspan="8" class="cx-empty">
+                                    No hay cirugías registradas en el rango seleccionado.
                                 </td>
                             </tr>
                             @endforelse
@@ -748,7 +843,7 @@ $estadoSolicitado = (int) $solicitadas;
                     <div class="cx-split">
                         <div class="cx-item">
                             <div class="cx-item-title">Emergencias</div>
-                            <div class="cx-item-sub">Casos críticos del día</div>
+                            <div class="cx-item-sub">Casos críticos registrados</div>
                             <div class="cx-card-value" style="font-size: 26px; margin-top: 8px;">{{ $emergencias }}</div>
                         </div>
 
@@ -790,13 +885,15 @@ $estadoSolicitado = (int) $solicitadas;
                         @forelse($cirugiasEmergencia->take(4) as $e)
                         <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08);">
                             <div class="cx-item-sub">
+                                <strong>{{ $fechaMostrar($e) }}</strong>
+                                —
                                 <strong>{{ $e->hora_programada ? \Carbon\Carbon::parse($e->hora_programada)->format('H:i') : '-' }}</strong>
                                 — {{ $e->paciente ?? '-' }}
                             </div>
                             <div class="cx-item-sub">{{ $e->operacion ?? '-' }}</div>
                         </div>
                         @empty
-                        <div class="cx-empty" style="padding: 8px 0 0;">No se registran emergencias hoy.</div>
+                        <div class="cx-empty" style="padding: 8px 0 0;">No se registran emergencias.</div>
                         @endforelse
                     </div>
 
@@ -808,7 +905,7 @@ $estadoSolicitado = (int) $solicitadas;
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script >
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         const salaLabels = @json($chartSalaLabels);
         const salaData = @json($chartSalaData);
@@ -948,5 +1045,11 @@ $estadoSolicitado = (int) $solicitadas;
             });
         }
     });
+</script>
+
+<script>
+    setTimeout(function() {
+        location.reload();
+    }, 60000);
 </script>
 @endsection

@@ -136,6 +136,7 @@
         <div class="or-grid">
 
             {{-- ✅ MODULO PRINCIPAL: SOLICITUDES --}}
+            @can('solicitudes.ver')
             <div class="or-card">
                 <h4>
                     Solicitudes y Programación
@@ -151,13 +152,18 @@
                     <a class="or-btn or-btn-primary" href="{{ route('solicitudes.index') }}">
                         Abrir módulo
                     </a>
+
+                    @can('solicitudes.crear')
                     <a class="or-btn" href="{{ route('solicitudes.create') }}">
                         Nueva solicitud
                     </a>
+                    @endcan
                 </div>
             </div>
+            @endcan
 
             {{-- MODULOS FUTUROS --}}
+            @can('paneltv.ver')
             <div class="or-card">
                 <h4>
                     PanelTV
@@ -168,43 +174,50 @@
                     <a class="or-btn or-btn-primary" href="{{ route('cirugias.panel_tv') }}">Abrir módulo</a>
                 </div>
             </div>
-
+            @endcan
+            @can('panel.ver')
             <div class="or-card">
                 <h4>
                     Panel Control
                     <span class="or-badge ok">Activo</span>
                 </h4>
-                <p>Dashboard con las estadisticas de cirugias, proximas cirugias, gráficos.</p>
+                <p>Dashboard con las estadísticas de cirugías, próximas cirugías y gráficos.</p>
                 <div class="or-actions">
                     <a href="{{ route('cirugias.index') }}" class="or-btn or-btn-primary">Abrir módulo</a>
                 </div>
             </div>
+            @endcan
 
+            @can('ejecucion.ver')
             <div class="or-card">
                 <h4>
-                   Ejecución y Culminación
+                    Ejecución y Culminación
                     <span class="or-badge ok">Activo</span>
                 </h4>
-                <p>Dar inicio a una operación registrando información. Dar fin a la operación registrando información.
+                <p>
+                    Dar inicio a una operación registrando información. Dar fin a la operación registrando información.
                     Considera validación de operaciones.
                 </p>
                 <div class="or-actions">
-                    <a class="or-btn or-btn-primary" href="{{ route('ejecucion-cirugias.index') }}" >Abrir módulo</a>
+                    <a class="or-btn or-btn-primary" href="{{ route('ejecucion-cirugias.index') }}">Abrir módulo</a>
                 </div>
             </div>
+            @endcan
+
+            @can('reportes.ver')
             <div class="or-card">
                 <h4>
-                   Reportes
+                    Reportes
                     <span class="or-badge ok">Activo</span>
                 </h4>
-                <p>Generar reportes para informacion estadistica. Exportación de registros a Excel para impresión.
-                </p>
+                <p>Consulta y exportación de reportes de cirugías por fecha, sala, estado y tipo.</p>
                 <div class="or-actions">
-                    <a class="or-btn or-btn-primary" href="{{ route('ejecucion-cirugias.index') }}" >Abrir módulo</a>
+                    <a class="or-btn or-btn-primary" href="{{ route('reportes.index') }}">
+                        Abrir módulo
+                    </a>
                 </div>
             </div>
-
-
+            @endcan
         </div>
     </div>
 </div>
