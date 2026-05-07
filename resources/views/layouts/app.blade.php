@@ -7,6 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'SOP HBT') }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
 
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -171,17 +172,17 @@
         <nav class="navbar navbar-expand-md or-navbar shadow-sm">
             <div class="container">
 
-                <a href="{{ url('/home') }}" class="navbar-brand or-brand-header">
+                <a href="{{ route('home') }}" class="navbar-brand or-brand-header">
                     <div class="or-header-logos">
                         <img src="{{ asset('img/logogerencia.png') }}"
-                             alt="Gobierno Regional La Libertad"
-                             class="or-header-logo-gore">
+                            alt="Gobierno Regional La Libertad"
+                            class="or-header-logo-gore">
 
                         <span class="or-header-divider"></span>
 
                         <img src="{{ asset('img/logo.png') }}"
-                             alt="Hospital Belén de Trujillo"
-                             class="or-header-logo-hbt">
+                            alt="Hospital Belén de Trujillo"
+                            class="or-header-logo-hbt">
                     </div>
 
                     <div class="or-header-title">
@@ -206,7 +207,7 @@
 
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/home">Dashboard</a>
+                            <a class="nav-link" href="{{ route('home') }}">Menu Principal</a>
                         </li>
                     </ul>
 
@@ -214,47 +215,47 @@
 
                         @guest
 
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">Login</a>
-                                </li>
-                            @endif
+                        @if (Route::has('login'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                        </li>
+                        @endif
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">Register</a>
-                                </li>
-                            @endif
+                        @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">Register</a>
+                        </li>
+                        @endif
 
                         @else
 
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown"
-                                   class="nav-link dropdown-toggle"
-                                   href="#"
-                                   role="button"
-                                   data-bs-toggle="dropdown"
-                                   aria-haspopup="true"
-                                   aria-expanded="false"
-                                   v-pre>
-                                    {{ Auth::user()->name }}
+                        <li class="nav-item dropdown">
+                            <a id="navbarDropdown"
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                v-pre>
+                                {{ Auth::user()->name }}
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item"
+                                    href="{{ route('logout') }}"
+                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                    Cerrar sesión
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item"
-                                       href="{{ route('logout') }}"
-                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                        Cerrar sesión
-                                    </a>
-
-                                    <form id="logout-form"
-                                          action="{{ route('logout') }}"
-                                          method="POST"
-                                          class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
+                                <form id="logout-form"
+                                    action="{{ route('logout') }}"
+                                    method="POST"
+                                    class="d-none">
+                                    @csrf
+                                </form>
+                            </div>
+                        </li>
 
                         @endguest
 

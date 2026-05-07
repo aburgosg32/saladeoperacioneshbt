@@ -480,7 +480,7 @@
             minute: '2-digit'
         });
 
-        const mensaje = `Atención. Próxima cirugía en ${umbral} minutos. Hora programada ${horaTexto}. Sala ${cirugia.sala_operacion ?? 'sin sala asignada'}. Paciente ${cirugia.paciente ?? 'no especificado'}. Operación ${cirugia.operacion ?? 'no especificada'}.`;
+        const mensaje = `Atención. Próxima cirugía en ${umbral} minutos. Hora programada ${horaTexto}. En ${cirugia.sala_operacion ?? 'sin sala asignada'}. Paciente ${cirugia.paciente ?? 'no especificado'}. Operación ${cirugia.operacion ?? 'no especificada'}. Cirujano principal ${cirugia.cirujano_principal ?? 'no especificado'}.`;
 
         const utterance = new SpeechSynthesisUtterance(mensaje);
         utterance.lang = 'es-PE';
@@ -504,11 +504,12 @@
             });
 
         document.getElementById('alertaInfo').innerHTML = `
-            <div style="margin-bottom:10px;"><b>Inicia en ${umbral} minutos</b></div>
-            <b>Sala:</b> ${c.sala_operacion ?? '-'} <br>
-            <b>Paciente:</b> ${c.paciente ?? '-'} <br>
-            <b>Operación:</b> ${c.operacion ?? '-'}
-        `;
+    <div style="margin-bottom:10px;"><b>Inicia en ${umbral} minutos</b></div>
+    <b>Sala:</b> ${c.sala_operacion ?? '-'} <br>
+    <b>Paciente:</b> ${c.paciente ?? '-'} <br>
+    <b>Operación:</b> ${c.operacion ?? '-'} <br>
+    <b>Cirujano principal:</b> ${c.cirujano_principal ?? '-'}
+`;
 
         const alerta = document.getElementById('alertaCirugia');
         alerta.style.display = 'flex';

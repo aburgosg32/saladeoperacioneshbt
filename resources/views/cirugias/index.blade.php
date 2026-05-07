@@ -1050,6 +1050,6 @@ $estadoSolicitado = (int) $solicitadas;
 <script>
     setTimeout(function() {
         location.reload();
-    }, 60000);
+    }, 30000);
 </script>
 @endsection

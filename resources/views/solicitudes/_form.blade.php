@@ -223,6 +223,21 @@ $esEdicion = isset($solicitud);
         background: rgba(6, 18, 24, .55);
     }
 
+    .input.is-invalid,
+    .select.is-invalid,
+    .textarea.is-invalid {
+        border-color: rgba(255, 107, 107, .85) !important;
+        box-shadow: 0 0 0 3px rgba(255, 107, 107, .12);
+    }
+
+    .field-error {
+        margin-top: 6px;
+        font-size: 12px;
+        font-weight: 800;
+        color: rgba(255, 107, 107, .95);
+        line-height: 1.4;
+    }
+
     .help {
         margin-top: 6px;
         font-size: 12px;
@@ -294,12 +309,24 @@ $esEdicion = isset($solicitud);
         margin-bottom: 12px;
     }
 
+    .server-error-title {
+        font-size: 14px;
+        font-weight: 900;
+        margin-bottom: 8px;
+        color: #ff9a9a;
+    }
+
+    .server-error ul {
+        margin: 0;
+        padding-left: 18px;
+        line-height: 1.7;
+    }
+
     #paciente {
         font-weight: 600;
         letter-spacing: .2px;
     }
 
-    /* SOLO SELECT2 PARA CIRUJANO PRINCIPAL */
     .select2-container {
         width: 100% !important;
     }
@@ -376,7 +403,6 @@ $esEdicion = isset($solicitud);
         color: #fff !important;
     }
 
-    /* BLOQUE FINAL DE PROGRAMACIÓN */
     .programacion-box {
         grid-column: span 12;
         border: 1px solid rgba(27, 179, 242, .28);
@@ -416,7 +442,15 @@ $esEdicion = isset($solicitud);
 
 @if ($errors->any())
 <div class="server-error">
-    Revisa los campos marcados. ({{ $errors->count() }} error(es))
+    <div class="server-error-title">
+        Se encontraron {{ $errors->count() }} error(es) en el formulario:
+    </div>
+
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
 </div>
 @endif
 
@@ -439,17 +473,29 @@ $esEdicion = isset($solicitud);
         <div class="field" style="min-width: 320px;">
             <label>Tipo / Intervención</label>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <select class="select" name="tipo_solicitud">
-                    <option value="PROGRAMADA" {{ old('tipo_solicitud', $s->tipo_solicitud ?? 'PROGRAMADA') == 'PROGRAMADA' ? 'selected' : '' }}>Programada</option>
-                    <option value="EMERGENCIA" {{ old('tipo_solicitud', $s->tipo_solicitud ?? '') == 'EMERGENCIA' ? 'selected' : '' }}>Emergencia</option>
-                </select>
+                <div>
+                    <select class="select @error('tipo_solicitud') is-invalid @enderror" name="tipo_solicitud">
+                        <option value="PROGRAMADA" {{ old('tipo_solicitud', $s->tipo_solicitud ?? 'PROGRAMADA') == 'PROGRAMADA' ? 'selected' : '' }}>Programada</option>
+                        <option value="EMERGENCIA" {{ old('tipo_solicitud', $s->tipo_solicitud ?? '') == 'EMERGENCIA' ? 'selected' : '' }}>Emergencia</option>
+                    </select>
 
-                <select class="select" name="intervencion">
-                    <option value="">Intervención</option>
-                    @foreach(['1ra','2da','3ra'] as $it)
-                    <option value="{{ $it }}" {{ old('intervencion', $s->intervencion ?? '') == $it ? 'selected' : '' }}>{{ $it }}</option>
-                    @endforeach
-                </select>
+                    @error('tipo_solicitud')
+                    <div class="field-error">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div>
+                    <select class="select @error('intervencion') is-invalid @enderror" name="intervencion">
+                        <option value="">Intervención</option>
+                        @foreach(['1ra','2da','3ra'] as $it)
+                        <option value="{{ $it }}" {{ old('intervencion', $s->intervencion ?? '') == $it ? 'selected' : '' }}>{{ $it }}</option>
+                        @endforeach
+                    </select>
+
+                    @error('intervencion')
+                    <div class="field-error">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
         </div>
     </div>
@@ -457,86 +503,137 @@ $esEdicion = isset($solicitud);
     <div class="paper-grid">
         <div class="field c3">
             <label>Para el día</label>
-            <input class="input" type="date" name="para_el_dia" value="{{ old('para_el_dia', $s->para_el_dia ?? '') }}">
+            <input class="input @error('para_el_dia') is-invalid @enderror" type="date" name="para_el_dia" value="{{ old('para_el_dia', $s->para_el_dia ?? '') }}">
+            @error('para_el_dia')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c3">
             <label>A horas</label>
-            <input class="input" type="time" name="a_horas" value="{{ old('a_horas', $s->a_horas ?? '') }}">
+            <input class="input @error('a_horas') is-invalid @enderror" type="time" name="a_horas" value="{{ old('a_horas', $s->a_horas ?? '') }}">
+            @error('a_horas')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c4">
             <label>Servicio de</label>
-            <input class="input" name="servicio" value="{{ old('servicio', $s->servicio ?? '') }}" placeholder="Ej: Cirugía General">
+            <input class="input @error('servicio') is-invalid @enderror" name="servicio" value="{{ old('servicio', $s->servicio ?? '') }}" placeholder="Ej: Cirugía General">
+            @error('servicio')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c2">
             <label>Cama N°</label>
-            <input class="input" name="cama" value="{{ old('cama', $s->cama ?? '') }}">
+            <input class="input @error('cama') is-invalid @enderror" name="cama" value="{{ old('cama', $s->cama ?? '') }}">
+            @error('cama')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="divider"></div>
 
         <div class="field c2">
             <label>N° Historia Clínica</label>
-            <input id="n_historia" class="input" name="n_historia" value="{{ old('n_historia', $s->n_historia ?? '') }}" autocomplete="off" inputmode="numeric" pattern="[0-9]*" placeholder="Ingrese HC">
+            <input id="n_historia" class="input @error('n_historia') is-invalid @enderror" name="n_historia" value="{{ old('n_historia', $s->n_historia ?? '') }}" autocomplete="off" inputmode="numeric" pattern="[0-9]*" placeholder="Ingrese HC">
             <input id="id_paciente_sigh" type="hidden" name="id_paciente_sigh" value="{{ old('id_paciente_sigh', $s->id_paciente_sigh ?? '') }}">
             <div id="hc_msg" class="help"></div>
+            @error('n_historia')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c8">
             <label>Paciente</label>
-            <input id="paciente" class="input" name="paciente" value="{{ old('paciente', $s->paciente ?? '') }}" readonly>
+            <input id="paciente" class="input @error('paciente') is-invalid @enderror" name="paciente" value="{{ old('paciente', $s->paciente ?? '') }}" readonly>
+            @error('paciente')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c2">
             <label>Edad</label>
-            <input id="edad" class="input" name="edad" value="{{ old('edad', $s->edad ?? '') }}" readonly>
+            <input id="edad" class="input @error('edad') is-invalid @enderror" name="edad" value="{{ old('edad', $s->edad ?? '') }}" readonly>
+            @error('edad')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="divider"></div>
 
         <div class="field c2">
             <label>Código Diagnóstico (CIE10)</label>
-            <input id="codigo_diagnostico" class="input" name="codigo_diagnostico" value="{{ old('codigo_diagnostico', $s->codigo_diagnostico ?? '') }}" autocomplete="off" placeholder="Ej: S72.0">
+            <input id="codigo_diagnostico" class="input @error('codigo_diagnostico') is-invalid @enderror" name="codigo_diagnostico" value="{{ old('codigo_diagnostico', $s->codigo_diagnostico ?? '') }}" autocomplete="off" placeholder="Ej: S72.0">
             <div id="cie10_msg" class="help"></div>
+            @error('codigo_diagnostico')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c4">
             <label>Diagnóstico</label>
-            <textarea id="diagnostico" class="textarea" name="diagnostico" readonly>{{ old('diagnostico', $s->diagnostico ?? '') }}</textarea>
+            <textarea id="diagnostico" class="textarea @error('diagnostico') is-invalid @enderror" name="diagnostico" readonly>{{ old('diagnostico', $s->diagnostico ?? '') }}</textarea>
+            @error('diagnostico')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c2">
             <label>Código de Operación (CPT)</label>
-            <input id="codigo_operacion" class="input" name="codigo_operacion" value="{{ old('codigo_operacion', $s->codigo_operacion ?? '') }}" autocomplete="off" placeholder="Ej: 27130">
+            <input id="codigo_operacion" class="input @error('codigo_operacion') is-invalid @enderror" name="codigo_operacion" value="{{ old('codigo_operacion', $s->codigo_operacion ?? '') }}" autocomplete="off" placeholder="Ej: 27130">
             <div id="cpt_msg" class="help"></div>
+            @error('codigo_operacion')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c4">
             <label>Operación</label>
-            <textarea id="operacion" class="textarea" name="operacion" readonly>{{ old('operacion', $s->operacion ?? '') }}</textarea>
+            <textarea id="operacion" class="textarea @error('operacion') is-invalid @enderror" name="operacion" readonly>{{ old('operacion', $s->operacion ?? '') }}</textarea>
+            @error('operacion')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c3">
             <label>Hto</label>
-            <input class="input" name="hto" value="{{ old('hto', $s->hto ?? '') }}">
+            <input class="input @error('hto') is-invalid @enderror" name="hto" value="{{ old('hto', $s->hto ?? '') }}">
+            @error('hto')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c3">
             <label>Hb</label>
-            <input class="input" name="hb" value="{{ old('hb', $s->hb ?? '') }}">
+            <input class="input @error('hb') is-invalid @enderror" name="hb" value="{{ old('hb', $s->hb ?? '') }}">
+            @error('hb')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c3">
             <label>GS</label>
-            <input id="gs" class="input" name="gs" value="{{ old('gs', $s->gs ?? '') }}">
+            <input id="gs" class="input @error('gs') is-invalid @enderror" name="gs" value="{{ old('gs', $s->gs ?? '') }}">
+            @error('gs')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c3">
             <label>Rh</label>
-            <input id="rh" class="input" name="rh" value="{{ old('rh', $s->rh ?? '') }}">
+            <input id="rh" class="input @error('rh') is-invalid @enderror" name="rh" value="{{ old('rh', $s->rh ?? '') }}">
+            @error('rh')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="divider"></div>
 
         <div class="field c6">
             <label>Cirujano Principal</label>
-            <select class="select medico-select" name="cirujano_principal">
+            <select class="select medico-select @error('cirujano_principal') is-invalid @enderror" name="cirujano_principal">
                 <option value=""></option>
                 @if(old('cirujano_principal', $s->cirujano_principal ?? ''))
                 <option value="{{ old('cirujano_principal', $s->cirujano_principal ?? '') }}" selected>
@@ -544,37 +641,59 @@ $esEdicion = isset($solicitud);
                 </option>
                 @endif
             </select>
+            @error('cirujano_principal')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c6">
             <label>1er Ayudante</label>
-            <input class="input" name="primer_ayudante" value="{{ old('primer_ayudante', $s->primer_ayudante ?? '') }}">
+            <input class="input @error('primer_ayudante') is-invalid @enderror" name="primer_ayudante" value="{{ old('primer_ayudante', $s->primer_ayudante ?? '') }}">
+            @error('primer_ayudante')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c4">
             <label>2do Ayudante</label>
-            <input class="input" name="segundo_ayudante" value="{{ old('segundo_ayudante', $s->segundo_ayudante ?? '') }}">
+            <input class="input @error('segundo_ayudante') is-invalid @enderror" name="segundo_ayudante" value="{{ old('segundo_ayudante', $s->segundo_ayudante ?? '') }}">
+            @error('segundo_ayudante')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c4">
             <label>3er Ayudante</label>
-            <input class="input" name="tercer_ayudante" value="{{ old('tercer_ayudante', $s->tercer_ayudante ?? '') }}">
+            <input class="input @error('tercer_ayudante') is-invalid @enderror" name="tercer_ayudante" value="{{ old('tercer_ayudante', $s->tercer_ayudante ?? '') }}">
+            @error('tercer_ayudante')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="field c4">
             <label>Instrumentista</label>
-            <input class="input" name="instrumentista" value="{{ old('instrumentista', $s->instrumentista ?? '') }}">
+            <input class="input @error('instrumentista') is-invalid @enderror" name="instrumentista" value="{{ old('instrumentista', $s->instrumentista ?? '') }}">
+            @error('instrumentista')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="divider"></div>
 
         <div class="field c6">
             <label>Tiempo Operativo Aprox.</label>
-            <input class="input" name="tiempo_operativo_aprox" value="{{ old('tiempo_operativo_aprox', $s->tiempo_operativo_aprox ?? '') }}" placeholder="Ej: 01:30">
+            <input class="input @error('tiempo_operativo_aprox') is-invalid @enderror" name="tiempo_operativo_aprox" value="{{ old('tiempo_operativo_aprox', $s->tiempo_operativo_aprox ?? '') }}" placeholder="Ej: 01:30">
+            @error('tiempo_operativo_aprox')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
+
         <div class="field c6">
             <label>Posición del Paciente</label>
-            <input class="input" name="posicion_paciente" value="{{ old('posicion_paciente', $s->posicion_paciente ?? '') }}" placeholder="Ej: Decúbito supino">
+            <input class="input @error('posicion_paciente') is-invalid @enderror" name="posicion_paciente" value="{{ old('posicion_paciente', $s->posicion_paciente ?? '') }}" placeholder="Ej: Decúbito supino">
+            @error('posicion_paciente')
+            <div class="field-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="divider"></div>
@@ -589,26 +708,34 @@ $esEdicion = isset($solicitud);
                 <div class="field c4">
                     <label>Fecha Programada</label>
                     <input
-                        class="input"
+                        class="input @error('fecha_programada') is-invalid @enderror"
                         type="date"
                         name="fecha_programada"
                         value="{{ old('fecha_programada', $s->fecha_programada ?? '') }}"
                         {{ $esEdicion ? '' : 'disabled' }}>
+
+                    @error('fecha_programada')
+                    <div class="field-error">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="field c4">
                     <label>Hora Programada</label>
                     <input
-                        class="input"
+                        class="input @error('hora_programada') is-invalid @enderror"
                         type="time"
                         name="hora_programada"
                         value="{{ old('hora_programada', $s->hora_programada ?? '') }}"
                         {{ $esEdicion ? '' : 'disabled' }}>
+
+                    @error('hora_programada')
+                    <div class="field-error">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="field c4">
                     <label>Sala de Operación</label>
-                    <select class="input" name="sala_operacion" {{ $esEdicion ? '' : 'disabled' }}>
+                    <select class="input @error('sala_operacion') is-invalid @enderror" name="sala_operacion" {{ $esEdicion ? '' : 'disabled' }}>
                         <option value="">-- Seleccione sala --</option>
 
                         @for($i = 1; $i <= 6; $i++)
@@ -616,13 +743,15 @@ $esEdicion = isset($solicitud);
                             $sala='SALA ' . str_pad($i, 2, '0' , STR_PAD_LEFT);
                             @endphp
 
-                            <option value="{{ $sala }}"
-                            {{ old('sala_operacion', $s->sala_operacion ?? '') == $sala ? 'selected' : '' }}>
+                            <option value="{{ $sala }}" {{ old('sala_operacion', $s->sala_operacion ?? '') == $sala ? 'selected' : '' }}>
                             {{ $sala }}
                             </option>
                             @endfor
-
                     </select>
+
+                    @error('sala_operacion')
+                    <div class="field-error">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
 
@@ -685,130 +814,138 @@ $esEdicion = isset($solicitud);
             setMsg(cptMsg, text, cls);
         }
 
-        hc.addEventListener('input', () => {
-            clearTimeout(tHC);
-            const val = hc.value.trim();
+        if (hc) {
+            hc.addEventListener('input', () => {
+                clearTimeout(tHC);
+                const val = hc.value.trim();
 
-            if (!val || val.length < 2) {
-                clearHC('', '');
-                return;
-            }
-
-            setMsg(msg, 'Buscando paciente en SIGH...', '');
-
-            tHC = setTimeout(async () => {
-                try {
-                    const url = `{{ route('api.paciente.por_historia') }}?n_historia=${encodeURIComponent(val)}`;
-                    const res = await fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    });
-
-                    if (!res.ok) {
-                        clearHC('HC no encontrada.', 'err');
-                        return;
-                    }
-
-                    const json = await res.json();
-
-                    if (json.ok) {
-                        pac.value = json.data.paciente ?? '';
-                        edad.value = json.data.edad ?? '';
-                        idp.value = json.data.id_paciente ?? '';
-                        if (gs) gs.value = json.data.grupo_sanguineo ?? '';
-                        if (rh) rh.value = json.data.factor_rh ?? '';
-                        setMsg(msg, 'Paciente encontrado.', 'ok');
-                    } else {
-                        clearHC('HC no encontrada.', 'err');
-                    }
-                } catch (e) {
-                    clearHC('Error de conexión.', 'err');
+                if (!val || val.length < 2) {
+                    clearHC('', '');
+                    return;
                 }
-            }, 300);
-        });
 
-        cie10.addEventListener('input', () => {
-            clearTimeout(tCIE10);
-            const val = cie10.value.trim();
+                setMsg(msg, 'Buscando paciente en SIGH...', '');
 
-            if (!val || val.length < 2) {
-                clearCIE10('', '');
-                return;
-            }
+                tHC = setTimeout(async () => {
+                    try {
+                        const url = `{{ route('api.paciente.por_historia') }}?n_historia=${encodeURIComponent(val)}`;
+                        const res = await fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
 
-            setMsg(cie10Msg, 'Buscando diagnóstico...', '');
-
-            tCIE10 = setTimeout(async () => {
-                try {
-                    const url = `{{ route('api.diagnostico.por_cie10') }}?codigo=${encodeURIComponent(val)}`;
-                    const res = await fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                        if (!res.ok) {
+                            clearHC('HC no encontrada.', 'err');
+                            return;
                         }
-                    });
 
-                    if (!res.ok) {
-                        clearCIE10('CIE10 no encontrado.', 'err');
-                        return;
-                    }
+                        const json = await res.json();
 
-                    const json = await res.json();
-
-                    if (json.ok) {
-                        diagnostico.value = json.data.descripcion ?? '';
-                        setMsg(cie10Msg, 'Diagnóstico encontrado.', 'ok');
-                    } else {
-                        clearCIE10('CIE10 no encontrado.', 'err');
-                    }
-                } catch (e) {
-                    clearCIE10('Error de conexión.', 'err');
-                }
-            }, 300);
-        });
-
-        cpt.addEventListener('input', () => {
-            clearTimeout(tCPT);
-            const val = cpt.value.trim();
-
-            if (!val || val.length < 2) {
-                clearCPT('', '');
-                return;
-            }
-
-            setMsg(cptMsg, 'Buscando operación...', '');
-
-            tCPT = setTimeout(async () => {
-                try {
-                    const url = `{{ route('api.operacion.por_cpt') }}?codigo=${encodeURIComponent(val)}`;
-                    const res = await fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
+                        if (json.ok) {
+                            pac.value = json.data.paciente ?? '';
+                            edad.value = json.data.edad ?? '';
+                            idp.value = json.data.id_paciente ?? '';
+                            if (gs) gs.value = json.data.grupo_sanguineo ?? '';
+                            if (rh) rh.value = json.data.factor_rh ?? '';
+                            setMsg(msg, 'Paciente encontrado.', 'ok');
+                        } else {
+                            clearHC('HC no encontrada.', 'err');
                         }
-                    });
-
-                    if (!res.ok) {
-                        clearCPT('CPT no encontrado.', 'err');
-                        return;
+                    } catch (e) {
+                        clearHC('Error de conexión.', 'err');
                     }
+                }, 300);
+            });
+        }
 
-                    const json = await res.json();
+        if (cie10) {
+            cie10.addEventListener('input', () => {
+                clearTimeout(tCIE10);
+                const val = cie10.value.trim();
 
-                    if (json.ok) {
-                        operacion.value = json.data.descripcion ?? '';
-                        setMsg(cptMsg, 'Operación encontrada.', 'ok');
-                    } else {
-                        clearCPT('CPT no encontrado.', 'err');
-                    }
-                } catch (e) {
-                    clearCPT('Error de conexión.', 'err');
+                if (!val || val.length < 2) {
+                    clearCIE10('', '');
+                    return;
                 }
-            }, 300);
-        });
+
+                setMsg(cie10Msg, 'Buscando diagnóstico...', '');
+
+                tCIE10 = setTimeout(async () => {
+                    try {
+                        const url = `{{ route('api.diagnostico.por_cie10') }}?codigo=${encodeURIComponent(val)}`;
+                        const res = await fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (!res.ok) {
+                            clearCIE10('CIE10 no encontrado.', 'err');
+                            return;
+                        }
+
+                        const json = await res.json();
+
+                        if (json.ok) {
+                            diagnostico.value = json.data.descripcion ?? '';
+                            setMsg(cie10Msg, 'Diagnóstico encontrado.', 'ok');
+                        } else {
+                            clearCIE10('CIE10 no encontrado.', 'err');
+                        }
+                    } catch (e) {
+                        clearCIE10('Error de conexión.', 'err');
+                    }
+                }, 300);
+            });
+        }
+
+        if (cpt) {
+            cpt.addEventListener('input', () => {
+                clearTimeout(tCPT);
+                const val = cpt.value.trim();
+
+                if (!val || val.length < 2) {
+                    clearCPT('', '');
+                    return;
+                }
+
+                setMsg(cptMsg, 'Buscando operación...', '');
+
+                tCPT = setTimeout(async () => {
+                    try {
+                        const url = `{{ route('api.operacion.por_cpt') }}?codigo=${encodeURIComponent(val)}`;
+                        const res = await fetch(url, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+
+                        if (!res.ok) {
+                            clearCPT('CPT no encontrado.', 'err');
+                            return;
+                        }
+
+                        const json = await res.json();
+
+                        if (json.ok) {
+                            operacion.value = json.data.descripcion ?? '';
+                            setMsg(cptMsg, 'Operación encontrada.', 'ok');
+                        } else {
+                            clearCPT('CPT no encontrado.', 'err');
+                        }
+                    } catch (e) {
+                        clearCPT('Error de conexión.', 'err');
+                    }
+                }, 300);
+            });
+        }
     });
 
     $(document).ready(function() {
-        $('select[name="cirujano_principal"]').select2({
+        const $medico = $('select[name="cirujano_principal"]');
+
+        $medico.select2({
             theme: 'bootstrap-5',
             width: '100%',
             placeholder: 'Escriba para buscar médico',

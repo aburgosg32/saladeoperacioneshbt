@@ -33,6 +33,12 @@
         border-color: rgba(27, 179, 242, .28);
     }
 
+    .or-state-e {
+        background: rgba(155, 123, 255, .12);
+        color: #c7b5ff;
+        border-color: rgba(155, 123, 255, .30);
+    }
+
     :root {
         --bg0: #061218;
         --bg1: #0a1d28;
@@ -108,6 +114,7 @@
         font-weight: 800;
         transition: transform .15s ease, border-color .15s ease, background .15s ease;
         white-space: nowrap;
+        cursor: pointer;
     }
 
     .or-btn:hover {
@@ -172,6 +179,90 @@
         border-radius: 16px;
         font-size: 12.5px;
         font-weight: 700;
+    }
+
+    .or-filter-panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+            radial-gradient(700px 260px at 10% 10%, rgba(43, 212, 197, .08), transparent 55%),
+            linear-gradient(180deg, rgba(12, 40, 56, .72), rgba(12, 40, 56, .38));
+        box-shadow: var(--shadow);
+        padding: 14px 16px;
+        margin-bottom: 14px;
+    }
+
+    .or-filter-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 12px;
+        align-items: end;
+    }
+
+    .or-filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .or-filter-field label {
+        color: rgba(234, 243, 248, .80);
+        font-size: 11px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .or-filter-input,
+    .or-filter-select {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, .10);
+        background: rgba(6, 18, 24, .35);
+        color: var(--text);
+        padding: 10px 10px;
+        outline: none;
+        font-size: 13px;
+    }
+
+    .or-filter-input:focus,
+    .or-filter-select:focus {
+        border-color: rgba(43, 212, 197, .75);
+        background: rgba(6, 18, 24, .55);
+    }
+
+    .or-filter-select option {
+        background: #0a1d28;
+        color: #eaf3f8;
+    }
+
+    .or-filter-c2 {
+        grid-column: span 2;
+    }
+
+    .or-filter-c3 {
+        grid-column: span 3;
+    }
+
+    .or-filter-c4 {
+        grid-column: span 4;
+    }
+
+    .or-filter-actions {
+        grid-column: span 3;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    @media (max-width: 980px) {
+
+        .or-filter-c2,
+        .or-filter-c3,
+        .or-filter-c4,
+        .or-filter-actions {
+            grid-column: span 12;
+        }
     }
 
     .or-table-wrap {
@@ -406,12 +497,6 @@
         opacity: .45;
         cursor: not-allowed;
     }
-
-    .or-state-e {
-        background: rgba(155, 123, 255, .12);
-        color: #c7b5ff;
-        border-color: rgba(155, 123, 255, .30);
-    }
 </style>
 
 <div class="or-page">
@@ -421,12 +506,13 @@
             <div>
                 <h1 class="or-title">Solicitudes de Sala de Operaciones</h1>
                 <p class="or-sub">
-                    Gestiona el registro de solicitudes (programadas o emergencias). Desde aquí puedes crear, ver, editar o eliminar.
+                    Gestiona el registro de solicitudes programadas o emergencias. Puedes filtrar por fecha, paciente, médico, servicio, operación, estado o tipo de solicitud.
                 </p>
             </div>
 
             <div class="or-actions">
-                <a class="or-btn" href="{{ url('/home') }}">Dashboard</a>
+                <a class="or-btn" href="{{ route('home') }}">Dashboard</a>
+
                 @can('solicitudes.crear')
                 <a class="or-btn or-btn-primary" href="{{ route('solicitudes.create') }}">
                     Nueva Solicitud
@@ -438,6 +524,72 @@
         @if(session('ok'))
         <div class="or-alert">{{ session('ok') }}</div>
         @endif
+
+        <div class="or-filter-panel">
+            <form method="GET" action="{{ route('solicitudes.index') }}">
+                <div class="or-filter-grid">
+
+                    <div class="or-filter-field or-filter-c2">
+                        <label>Fecha inicio</label>
+                        <input
+                            type="date"
+                            name="fecha_inicio"
+                            value="{{ request('fecha_inicio') }}"
+                            class="or-filter-input">
+                    </div>
+
+                    <div class="or-filter-field or-filter-c2">
+                        <label>Fecha fin</label>
+                        <input
+                            type="date"
+                            name="fecha_fin"
+                            value="{{ request('fecha_fin') }}"
+                            class="or-filter-input">
+                    </div>
+
+                    <div class="or-filter-field or-filter-c2">
+                        <label>Estado</label>
+                        <select name="estado" class="or-filter-select">
+                            <option value="">Todos</option>
+                            <option value="S" {{ request('estado') === 'S' ? 'selected' : '' }}>Solicitado</option>
+                            <option value="P" {{ request('estado') === 'P' ? 'selected' : '' }}>Programado</option>
+                            <option value="E" {{ request('estado') === 'E' ? 'selected' : '' }}>En curso</option>
+                            <option value="C" {{ request('estado') === 'C' ? 'selected' : '' }}>Culminado</option>
+                        </select>
+                    </div>
+
+                    <div class="or-filter-field or-filter-c2">
+                        <label>Tipo</label>
+                        <select name="tipo_solicitud" class="or-filter-select">
+                            <option value="">Todos</option>
+                            <option value="PROGRAMADA" {{ request('tipo_solicitud') === 'PROGRAMADA' ? 'selected' : '' }}>Programada</option>
+                            <option value="EMERGENCIA" {{ request('tipo_solicitud') === 'EMERGENCIA' ? 'selected' : '' }}>Emergencia</option>
+                        </select>
+                    </div>
+
+                    <div class="or-filter-field or-filter-c4">
+                        <label>Buscar</label>
+                        <input
+                            type="text"
+                            name="buscar"
+                            value="{{ request('buscar') }}"
+                            class="or-filter-input"
+                            placeholder="Paciente, médico, servicio, operación o historia clínica">
+                    </div>
+
+                    <div class="or-filter-actions">
+                        <button type="submit" class="or-btn or-btn-primary">
+                            Filtrar
+                        </button>
+
+                        <a href="{{ route('solicitudes.index') }}" class="or-btn">
+                            Limpiar
+                        </a>
+                    </div>
+
+                </div>
+            </form>
+        </div>
 
         <div class="or-panel">
             <div class="or-panel-head">
@@ -460,7 +612,7 @@
                             <th style="width:190px;">Paciente</th>
                             <th style="width:280px;">Operación</th>
                             <th style="width:130px;">Servicio</th>
-                            <th style="width:150px;" class="text-center">Medico</th>
+                            <th style="width:150px;" class="text-center">Médico</th>
                             <th style="width:150px; text-align:center;">Acciones</th>
                         </tr>
                     </thead>
@@ -557,6 +709,7 @@
                                         ✏️
                                     </a>
                                     @endcan
+
                                     @can('ejecucion.culminar')
                                     @if($s->estado === 'P')
                                     <a class="or-icon-btn"
@@ -588,7 +741,7 @@
                         @empty
                         <tr>
                             <td colspan="11" class="or-muted" style="padding: 18px 10px; text-align:center;">
-                                No hay solicitudes registradas.
+                                No hay solicitudes registradas con los filtros aplicados.
                             </td>
                         </tr>
                         @endforelse
@@ -598,15 +751,20 @@
 
             @if(method_exists($solicitudes, 'links'))
             <div class="or-pagination-wrap">
-                {{ $solicitudes->links() }}
+                {{ $solicitudes->appends(request()->query())->links() }}
             </div>
             @endif
         </div>
     </div>
 </div>
+
 <script>
     setTimeout(function() {
-        location.reload();
-    }, 10000); // cada 10 segundos
+        const hayFiltros = new URLSearchParams(window.location.search).toString().length > 0;
+
+        if (!hayFiltros) {
+            location.reload();
+        }
+    }, 5000);
 </script>
 @endsection

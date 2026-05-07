@@ -10,9 +10,49 @@ class SolicitudController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $solicitudes = Solicitud::orderByDesc('id')->paginate(10);
+        $query = Solicitud::query();
+
+        if ($request->filled('fecha_inicio')) {
+            $query->where(function ($q) use ($request) {
+                $q->whereDate('para_el_dia', '>=', $request->fecha_inicio)
+                    ->orWhereDate('fecha_programada', '>=', $request->fecha_inicio);
+            });
+        }
+
+        if ($request->filled('fecha_fin')) {
+            $query->where(function ($q) use ($request) {
+                $q->whereDate('para_el_dia', '<=', $request->fecha_fin)
+                    ->orWhereDate('fecha_programada', '<=', $request->fecha_fin);
+            });
+        }
+
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        if ($request->filled('tipo_solicitud')) {
+            $query->where('tipo_solicitud', $request->tipo_solicitud);
+        }
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->buscar;
+
+            $query->where(function ($q) use ($buscar) {
+                $q->where('paciente', 'like', "%{$buscar}%")
+                    ->orWhere('cirujano_principal', 'like', "%{$buscar}%")
+                    ->orWhere('servicio', 'like', "%{$buscar}%")
+                    ->orWhere('operacion', 'like', "%{$buscar}%")
+                    ->orWhere('n_historia', 'like', "%{$buscar}%");
+            });
+        }
+
+        $solicitudes = $query
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->appends($request->query());
+
         return view('solicitudes.index', compact('solicitudes'));
     }
 
@@ -29,37 +69,70 @@ class SolicitudController extends Controller
      */
     public function store(Request $request)
     {
+        $mensajes = [
+            'tipo_solicitud.required' => 'Debe seleccionar el tipo de solicitud.',
+            'tipo_solicitud.in' => 'El tipo de solicitud no es válido.',
+
+            'intervencion.in' => 'La intervención debe ser 1ra, 2da o 3ra.',
+
+            'para_el_dia.required' => 'Debe ingresar la fecha para la cirugía.',
+            'para_el_dia.date' => 'La fecha para la cirugía no tiene un formato válido.',
+
+            'a_horas.required' => 'Debe ingresar la hora solicitada.',
+
+            'servicio.required' => 'Debe ingresar el servicio.',
+            'n_historia.required' => 'Debe ingresar el número de historia clínica.',
+            'paciente.required' => 'Debe ingresar o buscar el paciente.',
+            'edad.required' => 'Debe ingresar la edad del paciente.',
+            'edad.integer' => 'La edad debe ser un número entero.',
+
+            'codigo_diagnostico.required' => 'Debe ingresar el código de diagnóstico CIE10.',
+            'diagnostico.required' => 'Debe ingresar el diagnóstico.',
+            'codigo_operacion.required' => 'Debe ingresar el código de operación CPT.',
+            'operacion.required' => 'Debe ingresar la operación.',
+
+            'cirujano_principal.required' => 'Debe ingresar el cirujano principal.',
+            'tiempo_operativo_aprox.required' => 'Debe ingresar el tiempo operativo aproximado.',
+            'posicion_paciente.required' => 'Debe ingresar la posición del paciente.',
+        ];
+
         $data = $request->validate([
             'tipo_solicitud' => ['required', 'in:PROGRAMADA,EMERGENCIA'],
             'intervencion' => ['nullable', 'in:1ra,2da,3ra'],
-            'para_el_dia' => ['nullable', 'date'],
-            'a_horas' => ['nullable'],
+
+            'para_el_dia' => ['required', 'date'],
+            'a_horas' => ['required'],
+
             'fecha_programada' => ['nullable', 'date'],
             'hora_programada' => ['nullable'],
             'sala_operacion' => ['nullable', 'string', 'max:50'],
-            'servicio' => ['nullable', 'string', 'max:255'],
-            'n_historia' => ['nullable', 'string', 'max:50'],
+
+            'servicio' => ['required', 'string', 'max:255'],
+            'n_historia' => ['required', 'string', 'max:50'],
             'id_paciente_sigh' => ['nullable', 'integer'],
-            'paciente' => ['nullable', 'string', 'max:255'],
-            'edad' => ['nullable', 'integer'],
+            'paciente' => ['required', 'string', 'max:255'],
+            'edad' => ['required', 'integer'],
             'cama' => ['nullable', 'string', 'max:50'],
-            'codigo_diagnostico' => ['nullable', 'string', 'max:20'],
-            'diagnostico' => ['nullable', 'string'],
-            'operacion' => ['nullable', 'string'],
-            'codigo_operacion' => ['nullable', 'string', 'max:100'],
+
+            'codigo_diagnostico' => ['required', 'string', 'max:20'],
+            'diagnostico' => ['required', 'string'],
+            'operacion' => ['required', 'string'],
+            'codigo_operacion' => ['required', 'string', 'max:100'],
+
             'hto' => ['nullable'],
             'hb' => ['nullable'],
             'gs' => ['nullable', 'string', 'max:5'],
             'rh' => ['nullable', 'string', 'max:5'],
-            'cirujano_principal' => ['nullable', 'string', 'max:255'],
+
+            'cirujano_principal' => ['required', 'string', 'max:255'],
             'primer_ayudante' => ['nullable', 'string', 'max:255'],
             'segundo_ayudante' => ['nullable', 'string', 'max:255'],
             'tercer_ayudante' => ['nullable', 'string', 'max:255'],
             'instrumentista' => ['nullable', 'string', 'max:255'],
-            'tiempo_operativo_aprox' => ['nullable', 'string', 'max:100'],
-            'posicion_paciente' => ['nullable', 'string', 'max:100'],
 
-        ]);
+            'tiempo_operativo_aprox' => ['required', 'string', 'max:100'],
+            'posicion_paciente' => ['required', 'string', 'max:100'],
+        ], $mensajes);
 
         $data['estado'] = 'S';
         $data['fecha_programada'] = null;
@@ -74,12 +147,12 @@ class SolicitudController extends Controller
                 ->withInput();
         }
 
-
         Solicitud::create($data);
 
-        return redirect()->route('solicitudes.index')->with('ok', 'Solicitud creada correctamente.');
+        return redirect()
+            ->route('solicitudes.index')
+            ->with('ok', 'Solicitud creada correctamente.');
     }
-
     private function validarConflictoPersonal(array $data, $idExcluir = null)
     {
         $fecha = $data['para_el_dia'] ?? null;

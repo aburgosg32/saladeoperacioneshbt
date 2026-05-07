@@ -443,4 +443,9 @@
         </div>
     </div>
 </div>
+<script>
+    setTimeout(function() {
+        location.reload();
+    }, 30000);
+</script>
 @endsection
