@@ -2,73 +2,100 @@
 
 @section('content')
 <style>
+    :root {
+        --bg0: #eef4f2;
+        --bg1: #f8fbfa;
+        --panel: rgba(255, 255, 255, .88);
+        --panel2: rgba(255, 255, 255, .72);
+        --line: rgba(25, 64, 72, .12);
+        --text: #20313a;
+        --muted: #6f7f86;
+        --primary: #35c89f;
+        --primary2: #0f8f9f;
+        --ok: #2fbe8f;
+        --danger: #d64d4d;
+        --warning: #c8952d;
+        --violet: #7c68c9;
+        --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+        --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+        --radius: 22px;
+    }
+
     #alertaCirugia {
         position: fixed;
         inset: 0;
-        background: rgba(3, 16, 24, 0.95);
+        background: rgba(238, 244, 242, .94);
         z-index: 9999;
         display: flex;
         align-items: center;
         justify-content: center;
+        backdrop-filter: blur(10px);
     }
 
     .alerta-box {
         text-align: center;
-        padding: 40px;
-        border-radius: 24px;
-        background: linear-gradient(135deg, #0a1d28, #0f2f3f);
-        border: 2px solid rgba(43, 212, 197, .5);
-        box-shadow: 0 0 40px rgba(43, 212, 197, .3);
-        max-width: 600px;
+        padding: 42px;
+        border-radius: 28px;
+        background:
+            radial-gradient(700px 360px at 18% 14%, rgba(214, 77, 77, .10), transparent 55%),
+            linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .84));
+        border: 1px solid rgba(214, 77, 77, .28);
+        box-shadow: 0 24px 70px rgba(35, 64, 70, .18);
+        max-width: 720px;
+        color: var(--text);
     }
 
     .alerta-titulo {
-        font-size: 32px;
+        font-size: 34px;
         font-weight: 900;
-        color: #ff6b6b;
-        margin-bottom: 20px;
+        color: var(--danger);
+        margin-bottom: 18px;
+        letter-spacing: -.4px;
     }
 
     .alerta-hora {
-        font-size: 48px;
+        font-size: 58px;
         font-weight: 900;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
+        color: #172f3a;
     }
 
     .alerta-info {
-        font-size: 20px;
-        line-height: 1.6;
-        color: #eaf3f8;
-    }
-
-    :root {
-        --bg0: #031018;
-        --bg1: #08202b;
-        --line: rgba(255, 255, 255, .12);
-        --text: #eef8fc;
-        --muted: rgba(238, 248, 252, .72);
-        --primary: #2bd4c5;
-        --primary2: #1bb3f2;
-        --danger: #ff6b6b;
-        --warning: #ffd36b;
-        --success: #2bd4c5;
-        --shadow: 0 18px 60px rgba(0, 0, 0, .40);
-        --radius: 22px;
+        font-size: 21px;
+        line-height: 1.7;
+        color: #40545c;
     }
 
     .tv-page {
         min-height: calc(100vh - 80px);
-        padding: 20px 18px 28px;
+        padding: 26px 18px 34px;
         background:
-            radial-gradient(1400px 800px at 10% 12%, rgba(43, 212, 197, .12), transparent 60%),
-            radial-gradient(1200px 700px at 90% 15%, rgba(27, 179, 242, .10), transparent 58%),
-            linear-gradient(180deg, var(--bg0), var(--bg1));
+            radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .18), transparent 58%),
+            radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .12), transparent 55%),
+            linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 48%, #eaf2f0 100%);
         color: var(--text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tv-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .24;
+        background-image:
+            linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
     }
 
     .tv-wrap {
         width: min(1600px, 98vw);
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .tv-head {
@@ -76,37 +103,46 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 18px;
-        margin-bottom: 18px;
+        margin-bottom: 20px;
     }
 
     .tv-title {
         margin: 0;
         font-size: 38px;
         font-weight: 900;
-        letter-spacing: -.4px;
+        letter-spacing: -.6px;
+        color: #172f3a;
     }
 
     .tv-sub {
         margin: 8px 0 0;
         font-size: 17px;
         color: var(--muted);
+        line-height: 1.5;
     }
 
     .tv-clock {
         text-align: right;
         min-width: 280px;
+        padding: 14px 18px;
+        border-radius: 20px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        box-shadow: var(--shadow2);
     }
 
     .tv-date {
-        font-size: 18px;
+        font-size: 17px;
         color: var(--muted);
         margin-bottom: 6px;
+        font-weight: 700;
     }
 
     .tv-time {
         font-size: 44px;
         font-weight: 900;
         line-height: 1;
+        color: #172f3a;
     }
 
     .tv-grid {
@@ -120,42 +156,64 @@
         border: 1px solid var(--line);
         border-radius: var(--radius);
         background:
-            radial-gradient(700px 220px at 18% 20%, rgba(43, 212, 197, .12), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .42));
-        box-shadow: var(--shadow);
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .10), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
+        box-shadow: var(--shadow2);
         padding: 18px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .tv-card::after {
+        content: "";
+        position: absolute;
+        right: -30px;
+        top: -30px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(53, 200, 159, .16), transparent 65%);
+        pointer-events: none;
     }
 
     .tv-card-label {
         color: var(--muted);
         font-size: 14px;
-        font-weight: 800;
+        font-weight: 900;
         text-transform: uppercase;
         letter-spacing: .5px;
         margin-bottom: 10px;
+        position: relative;
+        z-index: 1;
     }
 
     .tv-card-value {
         font-size: 42px;
         font-weight: 900;
         line-height: 1;
+        color: #172f3a;
+        position: relative;
+        z-index: 1;
     }
 
     .tv-card-note {
         margin-top: 10px;
         color: var(--muted);
         font-size: 13px;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
     }
 
     .tv-panel {
         border: 1px solid var(--line);
         border-radius: var(--radius);
         background:
-            radial-gradient(1000px 420px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            radial-gradient(800px 420px at 85% 30%, rgba(27, 179, 242, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .42));
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
         box-shadow: var(--shadow);
         overflow: hidden;
+        backdrop-filter: blur(14px);
     }
 
     .tv-panel-head {
@@ -164,21 +222,24 @@
         align-items: center;
         gap: 12px;
         padding: 16px 18px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .52);
     }
 
     .tv-panel-title {
         font-size: 20px;
         font-weight: 900;
+        color: #17313b;
     }
 
     .tv-badge {
-        color: var(--muted);
+        color: #227e70;
         font-size: 13px;
-        border: 1px solid var(--line);
+        font-weight: 900;
+        border: 1px solid rgba(53, 200, 159, .24);
         padding: 7px 12px;
         border-radius: 999px;
-        background: rgba(12, 40, 56, .30);
+        background: rgba(53, 200, 159, .10);
     }
 
     .tv-table-wrap {
@@ -194,28 +255,33 @@
     .tv-table th,
     .tv-table td {
         padding: 16px 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
+        border-bottom: 1px solid rgba(25, 64, 72, .08);
         vertical-align: middle;
     }
 
     .tv-table th {
         font-size: 15px;
         font-weight: 900;
-        color: rgba(238, 248, 252, .88);
+        color: #29414a;
         text-transform: uppercase;
         letter-spacing: .5px;
-        background: rgba(12, 40, 56, .22);
+        background: rgba(255, 255, 255, .66);
     }
 
     .tv-table td {
         font-size: 20px;
-        color: var(--text);
+        color: #40545c;
+    }
+
+    .tv-table tbody tr:hover td {
+        background: rgba(53, 200, 159, .045);
     }
 
     .tv-time-cell {
-        font-size: 26px;
+        font-size: 26px !important;
         font-weight: 900;
         white-space: nowrap;
+        color: #172f3a !important;
     }
 
     .tv-state {
@@ -226,32 +292,32 @@
         border-radius: 999px;
         font-size: 14px;
         font-weight: 900;
-        border: 1px solid rgba(255, 255, 255, .12);
+        border: 1px solid rgba(25, 64, 72, .10);
         white-space: nowrap;
     }
 
     .tv-state-p {
-        background: rgba(43, 212, 197, .12);
-        color: #2bd4c5;
-        border-color: rgba(43, 212, 197, .28);
+        background: rgba(53, 200, 159, .12);
+        color: #1f8f77;
+        border-color: rgba(53, 200, 159, .30);
     }
 
     .tv-state-e {
-        background: rgba(155, 123, 255, .12);
-        color: #c7b5ff;
-        border-color: rgba(155, 123, 255, .30);
+        background: rgba(124, 104, 201, .12);
+        color: #6753b0;
+        border-color: rgba(124, 104, 201, .24);
     }
 
     .tv-state-c {
-        background: rgba(27, 179, 242, .12);
-        color: #7fd8ff;
-        border-color: rgba(27, 179, 242, .28);
+        background: rgba(15, 143, 159, .12);
+        color: #0b7f8e;
+        border-color: rgba(15, 143, 159, .24);
     }
 
     .tv-state-s {
-        background: rgba(255, 193, 7, .12);
-        color: #ffd36b;
-        border-color: rgba(255, 193, 7, .28);
+        background: rgba(200, 149, 45, .12);
+        color: #9b6d13;
+        border-color: rgba(200, 149, 45, .22);
     }
 
     .tv-type {
@@ -260,8 +326,9 @@
         gap: 8px;
         padding: 7px 12px;
         border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .25);
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .72);
+        color: #40545c;
         font-size: 14px;
         font-weight: 900;
         white-space: nowrap;
@@ -272,10 +339,12 @@
         height: 10px;
         border-radius: 999px;
         background: var(--primary);
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .12);
     }
 
     .tv-dot.red {
         background: var(--danger);
+        box-shadow: 0 0 0 4px rgba(214, 77, 77, .12);
     }
 
     .tv-empty {
@@ -504,12 +573,12 @@
             });
 
         document.getElementById('alertaInfo').innerHTML = `
-    <div style="margin-bottom:10px;"><b>Inicia en ${umbral} minutos</b></div>
-    <b>Sala:</b> ${c.sala_operacion ?? '-'} <br>
-    <b>Paciente:</b> ${c.paciente ?? '-'} <br>
-    <b>Operación:</b> ${c.operacion ?? '-'} <br>
-    <b>Cirujano principal:</b> ${c.cirujano_principal ?? '-'}
-`;
+            <div style="margin-bottom:10px;"><b>Inicia en ${umbral} minutos</b></div>
+            <b>Sala:</b> ${c.sala_operacion ?? '-'} <br>
+            <b>Paciente:</b> ${c.paciente ?? '-'} <br>
+            <b>Operación:</b> ${c.operacion ?? '-'} <br>
+            <b>Cirujano principal:</b> ${c.cirujano_principal ?? '-'}
+        `;
 
         const alerta = document.getElementById('alertaCirugia');
         alerta.style.display = 'flex';

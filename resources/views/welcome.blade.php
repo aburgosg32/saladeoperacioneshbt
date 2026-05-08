@@ -8,22 +8,23 @@
 
     <style>
         :root {
-            --bg0: #061218;
-            --bg1: #0a1d28;
-            --panel: rgba(12, 40, 56, .62);
-            --panel2: rgba(12, 40, 56, .35);
-            --line: rgba(255, 255, 255, .12);
+            --bg0: #eef4f2;
+            --bg1: #f8fbfa;
 
-            --text: #eaf3f8;
-            --muted: rgba(234, 243, 248, .72);
+            --panel: rgba(255, 255, 255, .88);
+            --panel2: rgba(255, 255, 255, .72);
+            --line: rgba(25, 64, 72, .12);
 
-            --primary: #2bd4c5;
-            --primary2: #1bb3f2;
-            --ok: #39d98a;
+            --text: #20313a;
+            --muted: #6f7f86;
 
-            --shadow: 0 18px 60px rgba(0, 0, 0, .45);
-            --shadow2: 0 10px 30px rgba(0, 0, 0, .28);
-            --radius: 18px;
+            --primary: #35c89f;
+            --primary2: #0f8f9f;
+            --ok: #2fbe8f;
+
+            --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+            --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+            --radius: 22px;
         }
 
         * {
@@ -40,10 +41,9 @@
             font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
             color: var(--text);
             background:
-                radial-gradient(1100px 650px at 12% 10%, rgba(43, 212, 197, .16), transparent 60%),
-                radial-gradient(900px 520px at 90% 15%, rgba(27, 179, 242, .14), transparent 55%),
-                radial-gradient(650px 420px at 65% 85%, rgba(57, 217, 138, .10), transparent 60%),
-                linear-gradient(180deg, var(--bg0), var(--bg1));
+                radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .20), transparent 58%),
+                radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .14), transparent 55%),
+                linear-gradient(135deg, #eef4f2 0%, #f8fbfa 48%, #eaf2f0 100%);
             overflow-x: hidden;
         }
 
@@ -51,21 +51,23 @@
             position: fixed;
             inset: -200px;
             pointer-events: none;
-            background: radial-gradient(circle at 40% 25%, rgba(43, 212, 197, .16), transparent 45%);
-            filter: blur(36px);
-            opacity: .85;
+            background:
+                radial-gradient(circle at 40% 25%, rgba(53, 200, 159, .18), transparent 42%),
+                radial-gradient(circle at 70% 80%, rgba(15, 143, 159, .10), transparent 44%);
+            filter: blur(28px);
+            opacity: .9;
         }
 
         .grid {
             position: fixed;
             inset: 0;
             pointer-events: none;
-            opacity: .18;
+            opacity: .30;
             background-image:
-                linear-gradient(to right, rgba(255, 255, 255, .05) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, .05) 1px, transparent 1px);
-            background-size: 52px 52px;
-            mask-image: radial-gradient(circle at 40% 30%, black 0%, transparent 66%);
+                linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
         }
 
         .wrap {
@@ -94,22 +96,32 @@
             border: 1px solid var(--line);
             border-radius: var(--radius);
             background:
-                radial-gradient(900px 420px at 18% 20%, rgba(43, 212, 197, .14), transparent 55%),
-                radial-gradient(700px 420px at 85% 30%, rgba(27, 179, 242, .12), transparent 55%),
-                linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
+                radial-gradient(700px 360px at 18% 14%, rgba(53, 200, 159, .13), transparent 55%),
+                linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
             box-shadow: var(--shadow);
             padding: 30px;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(14px);
         }
 
         .left::after {
             content: "";
             position: absolute;
             inset: -1px;
-            background: radial-gradient(circle at 70% 8%, rgba(255, 255, 255, .10), transparent 42%);
+            background:
+                radial-gradient(circle at 72% 8%, rgba(53, 200, 159, .18), transparent 38%),
+                linear-gradient(120deg, rgba(255, 255, 255, .45), transparent 40%);
             pointer-events: none;
+        }
+
+        .topline,
+        .hero-title,
+        .hero-desc,
+        .features,
+        .footer {
+            position: relative;
+            z-index: 1;
         }
 
         .topline {
@@ -130,22 +142,13 @@
             display: flex;
             align-items: center;
             gap: 24px;
-
             padding: 18px 26px;
-
             border-radius: 24px;
-
-            background:
-                linear-gradient(180deg,
-                    rgba(255, 255, 255, .98),
-                    rgba(245, 248, 250, .96));
-
-            border: 1px solid rgba(255, 255, 255, .28);
-
+            background: linear-gradient(180deg, #ffffff, #f7faf9);
+            border: 1px solid rgba(25, 64, 72, .10);
             box-shadow:
-                0 18px 40px rgba(0, 0, 0, .28),
-                inset 0 1px 0 rgba(255, 255, 255, .65);
-
+                0 18px 40px rgba(35, 64, 70, .12),
+                inset 0 1px 0 rgba(255, 255, 255, .75);
             width: fit-content;
         }
 
@@ -166,15 +169,16 @@
         .brand-divider {
             width: 1px;
             height: 82px;
-            background: rgba(6, 18, 24, .18);
+            background: rgba(25, 64, 72, .16);
         }
 
         .brand-title {
             margin: 0;
             font-size: 26px;
-            letter-spacing: .6px;
+            letter-spacing: .4px;
             font-weight: 900;
             text-transform: uppercase;
+            color: #17313b;
         }
 
         .brand-sub {
@@ -182,6 +186,7 @@
             color: var(--muted);
             font-size: 15px;
             line-height: 1.5;
+            font-weight: 600;
         }
 
         .status {
@@ -190,10 +195,11 @@
             gap: 10px;
             padding: 10px 14px;
             border-radius: 999px;
-            border: 1px solid var(--line);
-            background: rgba(12, 40, 56, .35);
-            color: var(--muted);
+            border: 1px solid rgba(53, 200, 159, .24);
+            background: rgba(53, 200, 159, .10);
+            color: #227e70;
             font-size: 13px;
+            font-weight: 800;
             width: fit-content;
         }
 
@@ -202,7 +208,7 @@
             height: 10px;
             border-radius: 999px;
             background: var(--ok);
-            box-shadow: 0 0 0 6px rgba(57, 217, 138, .12);
+            box-shadow: 0 0 0 6px rgba(47, 190, 143, .15);
         }
 
         .hero-title {
@@ -210,6 +216,7 @@
             font-size: 46px;
             line-height: 1.05;
             letter-spacing: -.8px;
+            color: #172f3a;
         }
 
         .hero-desc {
@@ -254,10 +261,11 @@
         }
 
         .feat {
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            background: rgba(12, 40, 56, .35);
+            border: 1px solid rgba(25, 64, 72, .10);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .66);
             padding: 14px;
+            box-shadow: 0 8px 24px rgba(35, 64, 70, .07);
         }
 
         .feat .k {
@@ -265,8 +273,8 @@
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            color: rgba(234, 243, 248, .88);
-            font-weight: 700;
+            color: #253c45;
+            font-weight: 800;
             margin-bottom: 6px;
         }
 
@@ -275,12 +283,12 @@
             height: 10px;
             border-radius: 999px;
             background: var(--primary);
-            box-shadow: 0 0 0 6px rgba(43, 212, 197, .10);
+            box-shadow: 0 0 0 6px rgba(53, 200, 159, .13);
         }
 
         .chip.blue {
             background: var(--primary2);
-            box-shadow: 0 0 0 6px rgba(27, 179, 242, .10);
+            box-shadow: 0 0 0 6px rgba(15, 143, 159, .12);
         }
 
         .feat .v {
@@ -292,15 +300,17 @@
         .right {
             border: 1px solid var(--line);
             border-radius: var(--radius);
-            background: linear-gradient(180deg, rgba(12, 40, 56, .60), rgba(12, 40, 56, .28));
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .74));
             box-shadow: var(--shadow2);
             padding: 28px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(14px);
         }
 
         .right h3 {
             margin: 0 0 10px;
             font-size: 18px;
+            color: #17313b;
         }
 
         .right p {
@@ -323,29 +333,34 @@
             gap: 10px;
             width: 100%;
             padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid var(--line);
-            background: rgba(12, 40, 56, .35);
-            color: var(--text);
+            border-radius: 16px;
+            border: 1px solid rgba(25, 64, 72, .10);
+            background: rgba(255, 255, 255, .78);
+            color: #253c45;
             text-decoration: none;
             font-size: 14px;
-            font-weight: 700;
-            transition: transform .15s ease, border-color .15s ease, background .15s ease;
+            font-weight: 800;
+            transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
         }
 
         .btn:hover {
             transform: translateY(-1px);
-            background: rgba(12, 40, 56, .55);
-            border-color: rgba(27, 179, 242, .45);
+            background: #ffffff;
+            border-color: rgba(53, 200, 159, .30);
+            box-shadow: 0 10px 26px rgba(35, 64, 70, .10);
         }
 
         .btn-primary {
-            border-color: rgba(43, 212, 197, .60);
-            background: linear-gradient(135deg, rgba(43, 212, 197, .18), rgba(27, 179, 242, .14));
+            border-color: rgba(53, 200, 159, .44);
+            background: linear-gradient(135deg, #35c89f, #13a889);
+            color: #ffffff;
+            box-shadow: 0 12px 26px rgba(53, 200, 159, .24);
         }
 
         .btn-primary:hover {
-            border-color: rgba(43, 212, 197, .90);
+            border-color: rgba(19, 168, 137, .70);
+            background: linear-gradient(135deg, #39d6aa, #0f9f83);
+            color: #ffffff;
         }
 
         .divider {
@@ -353,7 +368,7 @@
             align-items: center;
             gap: 10px;
             margin: 18px 0;
-            color: rgba(234, 243, 248, .55);
+            color: #8a999f;
             font-size: 12px;
         }
 
@@ -361,13 +376,13 @@
         .divider::after {
             content: "";
             height: 1px;
-            background: var(--line);
+            background: rgba(25, 64, 72, .10);
             flex: 1;
         }
 
         .legal {
             margin-top: 10px;
-            color: rgba(234, 243, 248, .55);
+            color: #6f7f86;
             font-size: 12px;
             line-height: 1.7;
         }
@@ -378,12 +393,12 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 10px;
-            color: rgba(234, 243, 248, .55);
+            color: #7f8f95;
             font-size: 12px;
         }
 
         a:focus {
-            outline: 3px solid rgba(43, 212, 197, .35);
+            outline: 3px solid rgba(53, 200, 159, .28);
             outline-offset: 2px;
             border-radius: 12px;
         }
@@ -494,10 +509,10 @@
 
                     @auth
 
-                    <a class="btn btn-primary" href="{{ url('/home') }}">
+                    <a class="btn btn-primary" href="{{ route('home') }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M4 13h7V4H4v9zm0 7h7v-5H4v5zm9 0h7V11h-7v9zm0-18v7h7V2h-7z"
-                                fill="rgba(234,243,248,.9)" />
+                                fill="currentColor" />
                         </svg>
 
                         Ir al Home
@@ -508,7 +523,7 @@
                     <a class="btn btn-primary" href="{{ route('login') }}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                             <path d="M10 17l1.4-1.4-2.6-2.6H20v-2H8.8l2.6-2.6L10 7l-5 5 5 5z"
-                                fill="rgba(234,243,248,.9)" />
+                                fill="currentColor" />
                         </svg>
 
                         Iniciar sesión

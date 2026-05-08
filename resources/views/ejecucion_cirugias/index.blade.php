@@ -3,54 +3,75 @@
 @section('content')
 <style>
     :root {
-        --bg0: #061218;
-        --bg1: #0a1d28;
-        --line: rgba(255, 255, 255, .12);
-        --text: #eaf3f8;
-        --muted: rgba(234, 243, 248, .72);
-        --primary: #2bd4c5;
-        --primary2: #1bb3f2;
-        --warning: #ffd36b;
-        --danger: #ff6b6b;
-        --violet: #9b7bff;
-        --shadow: 0 18px 60px rgba(0, 0, 0, .45);
-        --radius: 18px;
+        --bg0: #eef4f2;
+        --bg1: #f8fbfa;
+        --line: rgba(25, 64, 72, .12);
+        --text: #20313a;
+        --muted: #6f7f86;
+        --primary: #35c89f;
+        --primary2: #0f8f9f;
+        --danger: #d64d4d;
+        --warning: #c8952d;
+        --violet: #7c68c9;
+        --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+        --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+        --radius: 22px;
     }
 
     .qx-page {
         min-height: calc(100vh - 80px);
-        padding: 24px 0 36px;
+        padding: 32px 0 42px;
         background:
-            radial-gradient(1100px 650px at 12% 10%, rgba(43, 212, 197, .10), transparent 60%),
-            radial-gradient(900px 520px at 90% 15%, rgba(27, 179, 242, .10), transparent 55%),
-            linear-gradient(180deg, var(--bg0), var(--bg1));
+            radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .18), transparent 58%),
+            radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .12), transparent 55%),
+            linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 48%, #eaf2f0 100%);
         color: var(--text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .qx-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .24;
+        background-image:
+            linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
     }
 
     .qx-container {
         width: min(1280px, 96vw);
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .qx-head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 12px;
+        gap: 16px;
         flex-wrap: wrap;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
     }
 
     .qx-title {
         margin: 0;
         font-size: 28px;
         font-weight: 900;
+        color: #172f3a;
+        letter-spacing: -.4px;
     }
 
     .qx-sub {
         margin: 6px 0 0;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 13.5px;
+        line-height: 1.7;
     }
 
     .qx-actions {
@@ -64,25 +85,36 @@
         align-items: center;
         justify-content: center;
         padding: 10px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         text-decoration: none;
         font-size: 12.5px;
-        font-weight: 800;
+        font-weight: 900;
+        transition: .15s ease;
+        cursor: pointer;
     }
 
     .qx-btn:hover {
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text);
+        transform: translateY(-1px);
+        background: #ffffff;
+        border-color: rgba(53, 200, 159, .30);
+        box-shadow: 0 10px 26px rgba(35, 64, 70, .10);
+        color: #253c45;
         text-decoration: none;
     }
 
     .qx-btn-primary {
-        border-color: rgba(43, 212, 197, .60);
-        background: linear-gradient(135deg, rgba(43, 212, 197, .18), rgba(27, 179, 242, .14));
+        border-color: rgba(53, 200, 159, .44);
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        color: #ffffff;
+        box-shadow: 0 12px 26px rgba(53, 200, 159, .20);
+    }
+
+    .qx-btn-primary:hover {
+        background: linear-gradient(135deg, #39d6aa, #0f9f83);
+        color: #ffffff;
     }
 
     .qx-grid {
@@ -106,79 +138,104 @@
 
     .qx-card {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius);
         background:
-            radial-gradient(700px 240px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
-        box-shadow: var(--shadow);
-        padding: 16px;
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .10), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
+        box-shadow: var(--shadow2);
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .qx-card::after {
+        content: "";
+        position: absolute;
+        right: -30px;
+        top: -30px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(53, 200, 159, .16), transparent 65%);
+        pointer-events: none;
     }
 
     .qx-card-label {
         color: var(--muted);
         font-size: 12px;
-        font-weight: 800;
+        font-weight: 900;
         margin-bottom: 8px;
         text-transform: uppercase;
         letter-spacing: .5px;
+        position: relative;
+        z-index: 1;
     }
 
     .qx-card-value {
         font-size: 30px;
         font-weight: 900;
         line-height: 1;
+        color: #172f3a;
+        position: relative;
+        z-index: 1;
     }
 
     .qx-card-note {
         margin-top: 8px;
         font-size: 12px;
         color: var(--muted);
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
     }
 
     .qx-alert {
         margin-bottom: 14px;
         padding: 12px 14px;
-        border-radius: 14px;
+        border-radius: 16px;
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 800;
+        box-shadow: var(--shadow2);
     }
 
     .qx-alert-ok {
-        border: 1px solid rgba(43, 212, 197, .35);
-        background: rgba(43, 212, 197, .08);
-        color: rgba(234, 243, 248, .95);
+        border: 1px solid rgba(53, 200, 159, .30);
+        background: rgba(53, 200, 159, .10);
+        color: #227e70;
     }
 
     .qx-alert-error {
-        border: 1px solid rgba(255, 107, 107, .35);
-        background: rgba(255, 107, 107, .08);
-        color: rgba(255, 255, 255, .95);
+        border: 1px solid rgba(214, 77, 77, .30);
+        background: rgba(214, 77, 77, .10);
+        color: #b43d3d;
     }
 
     .qx-panel {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius);
         background:
-            radial-gradient(900px 420px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            radial-gradient(700px 420px at 85% 30%, rgba(27, 179, 242, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
         box-shadow: var(--shadow);
         overflow: hidden;
+        backdrop-filter: blur(14px);
     }
 
     .qx-panel-head {
         padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
+        background: rgba(255, 255, 255, .52);
     }
 
     .qx-panel-title {
         font-weight: 900;
         font-size: 14px;
+        color: #17313b;
     }
 
     .qx-filter {
@@ -190,12 +247,21 @@
 
     .qx-input {
         height: 40px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        background: rgba(255, 255, 255, .04);
-        color: var(--text);
+        border-radius: 14px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .88);
+        color: #20313a;
         padding: 0 12px;
         outline: none;
+        font-size: 13px;
+        font-weight: 700;
+        transition: .15s ease;
+    }
+
+    .qx-input:focus {
+        border-color: rgba(53, 200, 159, .55);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .10);
     }
 
     .qx-table-wrap {
@@ -212,18 +278,26 @@
     .qx-table th,
     .qx-table td {
         padding: 12px 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
+        border-bottom: 1px solid rgba(25, 64, 72, .08);
         font-size: 12.5px;
         vertical-align: middle;
     }
 
     .qx-table th {
-        color: rgba(234, 243, 248, .85);
+        color: #29414a;
         font-weight: 900;
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: .45px;
-        background: rgba(12, 40, 56, .22);
+        background: rgba(255, 255, 255, .66);
+    }
+
+    .qx-table td {
+        color: #40545c;
+    }
+
+    .qx-table tbody tr:hover td {
+        background: rgba(53, 200, 159, .045);
     }
 
     .qx-badge {
@@ -233,21 +307,21 @@
         padding: 5px 10px;
         border-radius: 999px;
         font-size: 11px;
-        font-weight: 800;
-        border: 1px solid rgba(255, 255, 255, .12);
+        font-weight: 900;
+        border: 1px solid rgba(25, 64, 72, .10);
         white-space: nowrap;
     }
 
     .qx-state-p {
-        background: rgba(43, 212, 197, .12);
-        color: #2bd4c5;
-        border-color: rgba(43, 212, 197, .28);
+        background: rgba(53, 200, 159, .12);
+        color: #1f8f77;
+        border-color: rgba(53, 200, 159, .30);
     }
 
     .qx-state-e {
-        background: rgba(155, 123, 255, .12);
-        color: #c7b5ff;
-        border-color: rgba(155, 123, 255, .30);
+        background: rgba(124, 104, 201, .12);
+        color: #6753b0;
+        border-color: rgba(124, 104, 201, .24);
     }
 
     .qx-row-actions {
@@ -269,29 +343,32 @@
         min-width: 90px;
         height: 34px;
         padding: 0 12px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        border-radius: 10px;
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border: 1px solid rgba(25, 64, 72, .10);
+        border-radius: 13px;
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         font-size: 12px;
-        font-weight: 800;
+        font-weight: 900;
         cursor: pointer;
+        transition: .15s ease;
     }
 
     .qx-btn-start {
-        border-color: rgba(155, 123, 255, .30);
-        background: rgba(155, 123, 255, .12);
-        color: #d4c8ff;
+        border-color: rgba(124, 104, 201, .24);
+        background: rgba(124, 104, 201, .12);
+        color: #6753b0;
     }
 
     .qx-btn-finish {
-        border-color: rgba(27, 179, 242, .30);
-        background: rgba(27, 179, 242, .12);
-        color: #8eddff;
+        border-color: rgba(15, 143, 159, .24);
+        background: rgba(15, 143, 159, .12);
+        color: #0b7f8e;
     }
 
     .qx-btn-sm:hover {
-        opacity: .92;
+        transform: translateY(-1px);
+        background: #ffffff;
+        box-shadow: 0 10px 20px rgba(35, 64, 70, .10);
     }
 
     .qx-pagination {
@@ -317,7 +394,7 @@
             </div>
 
             <div class="qx-actions">
-                <a class="qx-btn" href="{{ url('/home') }}">Dashboard</a>
+                <a class="qx-btn" href="{{ route('home') }}">Menu Principal</a>
                 <a class="qx-btn" href="{{ route('solicitudes.index') }}">Solicitudes</a>
             </div>
         </div>
@@ -443,6 +520,7 @@
         </div>
     </div>
 </div>
+
 <script>
     setTimeout(function() {
         location.reload();

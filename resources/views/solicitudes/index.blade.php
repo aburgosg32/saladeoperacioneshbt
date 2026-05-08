@@ -2,94 +2,80 @@
 
 @section('content')
 <style>
-    .or-state-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: 11px;
-        font-weight: 800;
-        letter-spacing: .2px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        white-space: nowrap;
-    }
-
-    .or-state-s {
-        background: rgba(255, 193, 7, .12);
-        color: #ffd36b;
-        border-color: rgba(255, 193, 7, .28);
-    }
-
-    .or-state-a {
-        background: rgba(43, 212, 197, .12);
-        color: #2bd4c5;
-        border-color: rgba(43, 212, 197, .28);
-    }
-
-    .or-state-c {
-        background: rgba(27, 179, 242, .12);
-        color: #7fd8ff;
-        border-color: rgba(27, 179, 242, .28);
-    }
-
-    .or-state-e {
-        background: rgba(155, 123, 255, .12);
-        color: #c7b5ff;
-        border-color: rgba(155, 123, 255, .30);
-    }
-
     :root {
-        --bg0: #061218;
-        --bg1: #0a1d28;
-        --panel: rgba(12, 40, 56, .62);
-        --panel2: rgba(12, 40, 56, .35);
-        --line: rgba(255, 255, 255, .12);
-        --text: #eaf3f8;
-        --muted: rgba(234, 243, 248, .72);
-        --primary: #2bd4c5;
-        --primary2: #1bb3f2;
-        --shadow: 0 18px 60px rgba(0, 0, 0, .45);
-        --radius: 18px;
+        --bg0: #eef4f2;
+        --bg1: #f8fbfa;
+        --panel: rgba(255, 255, 255, .88);
+        --panel2: rgba(255, 255, 255, .72);
+        --line: rgba(25, 64, 72, .12);
+        --text: #20313a;
+        --muted: #6f7f86;
+        --primary: #35c89f;
+        --primary2: #0f8f9f;
+        --ok: #2fbe8f;
+        --danger: #d64d4d;
+        --warning: #c8952d;
+        --violet: #7c68c9;
+        --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+        --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+        --radius: 22px;
     }
 
     .or-page {
         min-height: calc(100vh - 80px);
-        padding: 22px 0 34px;
+        padding: 32px 0 42px;
         background:
-            radial-gradient(1100px 650px at 12% 10%, rgba(43, 212, 197, .10), transparent 60%),
-            radial-gradient(900px 520px at 90% 15%, rgba(27, 179, 242, .10), transparent 55%),
-            linear-gradient(180deg, var(--bg0), var(--bg1));
+            radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .18), transparent 58%),
+            radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .12), transparent 55%),
+            linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 48%, #eaf2f0 100%);
         color: var(--text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .or-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .24;
+        background-image:
+            linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
     }
 
     .or-container {
         width: min(1280px, 96vw);
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .or-head {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
-        gap: 12px;
+        gap: 16px;
         flex-wrap: wrap;
-        margin-bottom: 14px;
+        margin-bottom: 18px;
     }
 
     .or-title {
         margin: 0;
-        font-size: 22px;
+        font-size: 26px;
         font-weight: 900;
-        letter-spacing: -.2px;
+        letter-spacing: -.4px;
+        color: #172f3a;
     }
 
     .or-sub {
         margin: 6px 0 0;
         color: var(--muted);
-        font-size: 12.5px;
-        line-height: 1.6;
-        max-width: 78ch;
+        font-size: 13.5px;
+        line-height: 1.7;
+        max-width: 82ch;
     }
 
     .or-actions {
@@ -103,93 +89,62 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
         padding: 10px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         text-decoration: none;
         font-size: 12.5px;
-        font-weight: 800;
-        transition: transform .15s ease, border-color .15s ease, background .15s ease;
+        font-weight: 900;
+        transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
         white-space: nowrap;
         cursor: pointer;
     }
 
     .or-btn:hover {
         transform: translateY(-1px);
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text);
+        background: #ffffff;
+        border-color: rgba(53, 200, 159, .30);
+        box-shadow: 0 10px 26px rgba(35, 64, 70, .10);
+        color: #253c45;
     }
 
     .or-btn-primary {
-        border-color: rgba(43, 212, 197, .60);
-        background: linear-gradient(135deg, rgba(43, 212, 197, .18), rgba(27, 179, 242, .14));
+        border-color: rgba(53, 200, 159, .44);
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        color: #ffffff;
+        box-shadow: 0 12px 26px rgba(53, 200, 159, .20);
     }
 
     .or-btn-primary:hover {
-        border-color: rgba(43, 212, 197, .90);
-    }
-
-    .or-panel {
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        background:
-            radial-gradient(900px 420px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            radial-gradient(700px 420px at 85% 30%, rgba(27, 179, 242, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        backdrop-filter: blur(10px);
-    }
-
-    .or-panel-head {
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .or-panel-head .label {
-        font-weight: 900;
-        font-size: 13px;
-        letter-spacing: .2px;
-    }
-
-    .or-count {
-        color: var(--muted);
-        font-size: 12px;
-        border: 1px solid var(--line);
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(12, 40, 56, .30);
+        border-color: rgba(19, 168, 137, .70);
+        background: linear-gradient(135deg, #39d6aa, #0f9f83);
+        color: #ffffff;
     }
 
     .or-alert {
-        margin-bottom: 12px;
-        border: 1px solid rgba(43, 212, 197, .35);
-        background: rgba(43, 212, 197, .08);
-        color: rgba(234, 243, 248, .9);
+        margin-bottom: 14px;
+        border: 1px solid rgba(53, 200, 159, .30);
+        background: rgba(53, 200, 159, .10);
+        color: #227e70;
         padding: 12px 14px;
         border-radius: 16px;
         font-size: 12.5px;
-        font-weight: 700;
+        font-weight: 800;
+        box-shadow: var(--shadow2);
     }
 
     .or-filter-panel {
         border: 1px solid var(--line);
         border-radius: var(--radius);
         background:
-            radial-gradient(700px 260px at 10% 10%, rgba(43, 212, 197, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .72), rgba(12, 40, 56, .38));
-        box-shadow: var(--shadow);
-        padding: 14px 16px;
-        margin-bottom: 14px;
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
+        box-shadow: var(--shadow2);
+        padding: 16px;
+        margin-bottom: 16px;
     }
 
     .or-filter-grid {
@@ -206,7 +161,7 @@
     }
 
     .or-filter-field label {
-        color: rgba(234, 243, 248, .80);
+        color: #29414a;
         font-size: 11px;
         font-weight: 900;
         text-transform: uppercase;
@@ -216,32 +171,31 @@
     .or-filter-input,
     .or-filter-select {
         width: 100%;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, .10);
-        background: rgba(6, 18, 24, .35);
-        color: var(--text);
-        padding: 10px 10px;
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .88);
+        color: #20313a;
+        padding: 10px 12px;
         outline: none;
         font-size: 13px;
+        font-weight: 700;
+        transition: .15s ease;
     }
 
     .or-filter-input:focus,
     .or-filter-select:focus {
-        border-color: rgba(43, 212, 197, .75);
-        background: rgba(6, 18, 24, .55);
+        border-color: rgba(53, 200, 159, .55);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .10);
     }
 
     .or-filter-select option {
-        background: #0a1d28;
-        color: #eaf3f8;
+        background: #ffffff;
+        color: #20313a;
     }
 
     .or-filter-c2 {
         grid-column: span 2;
-    }
-
-    .or-filter-c3 {
-        grid-column: span 3;
     }
 
     .or-filter-c4 {
@@ -258,11 +212,49 @@
     @media (max-width: 980px) {
 
         .or-filter-c2,
-        .or-filter-c3,
         .or-filter-c4,
         .or-filter-actions {
             grid-column: span 12;
         }
+    }
+
+    .or-panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        backdrop-filter: blur(14px);
+    }
+
+    .or-panel-head {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        background: rgba(255, 255, 255, .52);
+    }
+
+    .or-panel-head .label {
+        font-weight: 900;
+        font-size: 13px;
+        letter-spacing: .2px;
+        color: #17313b;
+    }
+
+    .or-count {
+        color: #227e70;
+        font-size: 12px;
+        font-weight: 900;
+        border: 1px solid rgba(53, 200, 159, .24);
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(53, 200, 159, .10);
     }
 
     .or-table-wrap {
@@ -279,22 +271,26 @@
     .or-table th,
     .or-table td {
         padding: 14px 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
+        border-bottom: 1px solid rgba(25, 64, 72, .08);
         font-size: 12.5px;
         vertical-align: middle;
     }
 
     .or-table th {
-        color: rgba(234, 243, 248, .85);
+        color: #29414a;
         font-weight: 900;
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: .5px;
-        background: rgba(12, 40, 56, .22);
+        background: rgba(255, 255, 255, .66);
     }
 
     .or-table td {
-        color: rgba(234, 243, 248, .85);
+        color: #40545c;
+    }
+
+    .or-table tbody tr:hover td {
+        background: rgba(53, 200, 159, .045);
     }
 
     .or-muted {
@@ -307,10 +303,11 @@
         gap: 6px;
         padding: 5px 8px;
         border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .25);
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .72);
+        color: #40545c;
         font-size: 11px;
-        font-weight: 800;
+        font-weight: 900;
         letter-spacing: .2px;
         white-space: nowrap;
     }
@@ -320,12 +317,49 @@
         height: 8px;
         border-radius: 999px;
         background: var(--primary);
-        box-shadow: 0 0 0 4px rgba(43, 212, 197, .10);
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .12);
     }
 
     .or-dot.red {
-        background: rgba(255, 107, 107, .95);
-        box-shadow: 0 0 0 4px rgba(255, 107, 107, .10);
+        background: var(--danger);
+        box-shadow: 0 0 0 4px rgba(214, 77, 77, .12);
+    }
+
+    .or-state-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .2px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        white-space: nowrap;
+    }
+
+    .or-state-s {
+        background: rgba(200, 149, 45, .12);
+        color: #9b6d13;
+        border-color: rgba(200, 149, 45, .22);
+    }
+
+    .or-state-a {
+        background: rgba(53, 200, 159, .12);
+        color: #1f8f77;
+        border-color: rgba(53, 200, 159, .30);
+    }
+
+    .or-state-e {
+        background: rgba(124, 104, 201, .12);
+        color: #6753b0;
+        border-color: rgba(124, 104, 201, .24);
+    }
+
+    .or-state-c {
+        background: rgba(15, 143, 159, .12);
+        color: #0b7f8e;
+        border-color: rgba(15, 143, 159, .24);
     }
 
     .or-actions-row {
@@ -347,20 +381,21 @@
         justify-content: center;
         width: 36px;
         height: 36px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border-radius: 13px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         text-decoration: none;
         font-size: 15px;
-        transition: transform .15s ease, border-color .15s ease, background .15s ease;
+        transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
     }
 
     .or-icon-btn:hover {
         transform: translateY(-1px);
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text);
+        background: #ffffff;
+        border-color: rgba(53, 200, 159, .30);
+        box-shadow: 0 10px 20px rgba(35, 64, 70, .10);
+        color: #253c45;
     }
 
     .or-icon-btn-danger {
@@ -368,7 +403,7 @@
     }
 
     .or-icon-btn-danger:hover {
-        border-color: rgba(255, 107, 107, .70);
+        border-color: rgba(214, 77, 77, .35);
     }
 
     .or-paciente {
@@ -380,6 +415,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         word-break: break-word;
+        color: #20313a;
+        font-weight: 800;
     }
 
     .or-operacion {
@@ -402,8 +439,9 @@
     }
 
     .or-fecha {
-        font-weight: 700;
+        font-weight: 900;
         line-height: 1.3;
+        color: #20313a;
     }
 
     .or-hora {
@@ -415,6 +453,7 @@
 
     .or-sala {
         white-space: nowrap;
+        font-weight: 800;
     }
 
     .or-pagination-wrap {
@@ -470,27 +509,27 @@
         min-width: 40px;
         height: 40px;
         padding: 0 14px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text) !important;
+        border-radius: 13px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45 !important;
         text-decoration: none !important;
         font-size: 12.5px;
-        font-weight: 800;
+        font-weight: 900;
         line-height: 1;
         box-shadow: none !important;
     }
 
     .or-pagination-wrap a:hover {
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text) !important;
+        border-color: rgba(53, 200, 159, .30);
+        background: #ffffff;
+        color: #253c45 !important;
     }
 
     .or-pagination-wrap span[aria-current="page"] span {
-        background: linear-gradient(135deg, rgba(43, 212, 197, .18), rgba(27, 179, 242, .14));
-        border-color: rgba(43, 212, 197, .60);
-        color: #fff !important;
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        border-color: rgba(53, 200, 159, .44);
+        color: #ffffff !important;
     }
 
     .or-pagination-wrap span[aria-disabled="true"] span {
@@ -511,7 +550,7 @@
             </div>
 
             <div class="or-actions">
-                <a class="or-btn" href="{{ route('home') }}">Dashboard</a>
+                <a class="or-btn" href="{{ route('home') }}">Menu Principal</a>
 
                 @can('solicitudes.crear')
                 <a class="or-btn or-btn-primary" href="{{ route('solicitudes.create') }}">
@@ -765,6 +804,6 @@
         if (!hayFiltros) {
             location.reload();
         }
-    }, 5000);
+    }, 10000);
 </script>
 @endsection

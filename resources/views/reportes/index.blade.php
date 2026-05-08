@@ -3,39 +3,57 @@
 @section('content')
 <style>
     :root {
-        --bg0: #061218;
-        --bg1: #0a1d28;
-        --line: rgba(255, 255, 255, .12);
-        --text: #eaf3f8;
-        --muted: rgba(234, 243, 248, .72);
-        --primary: #2bd4c5;
-        --primary2: #1bb3f2;
-        --danger: #ff6b6b;
-        --warning: #ffd36b;
-        --shadow: 0 18px 60px rgba(0, 0, 0, .45);
-        --radius: 18px;
+        --bg0: #eef4f2;
+        --bg1: #f8fbfa;
+        --line: rgba(25, 64, 72, .12);
+        --text: #20313a;
+        --muted: #6f7f86;
+        --primary: #35c89f;
+        --primary2: #0f8f9f;
+        --danger: #d64d4d;
+        --warning: #c8952d;
+        --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+        --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+        --radius: 22px;
     }
 
     .rp-page {
         min-height: calc(100vh - 80px);
-        padding: 24px 0 36px;
+        padding: 32px 0 42px;
         background:
-            radial-gradient(1100px 650px at 12% 10%, rgba(43, 212, 197, .10), transparent 60%),
-            radial-gradient(900px 520px at 90% 15%, rgba(27, 179, 242, .10), transparent 55%),
-            linear-gradient(180deg, var(--bg0), var(--bg1));
+            radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .18), transparent 58%),
+            radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .12), transparent 55%),
+            linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 48%, #eaf2f0 100%);
         color: var(--text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .rp-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .24;
+        background-image:
+            linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
     }
 
     .rp-container {
         width: min(1380px, 96vw);
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .rp-head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 12px;
+        gap: 16px;
         flex-wrap: wrap;
         margin-bottom: 18px;
     }
@@ -44,12 +62,21 @@
         margin: 0;
         font-size: 30px;
         font-weight: 900;
+        letter-spacing: -.4px;
+        color: #172f3a;
     }
 
     .rp-sub {
         margin: 6px 0 0;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 13.5px;
+        line-height: 1.7;
+    }
+
+    .rp-actions-top {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
     .rp-btn {
@@ -57,44 +84,72 @@
         align-items: center;
         justify-content: center;
         padding: 10px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         text-decoration: none;
         font-size: 12.5px;
-        font-weight: 800;
+        font-weight: 900;
+        transition: .15s ease;
+        cursor: pointer;
     }
 
     .rp-btn:hover {
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text);
+        transform: translateY(-1px);
+        background: #ffffff;
+        border-color: rgba(53, 200, 159, .30);
+        box-shadow: 0 10px 26px rgba(35, 64, 70, .10);
+        color: #253c45;
         text-decoration: none;
     }
 
     .rp-btn-primary {
-        background: linear-gradient(135deg, rgba(43, 212, 197, .20), rgba(27, 179, 242, .20));
-        border-color: rgba(43, 212, 197, .28);
+        border-color: rgba(53, 200, 159, .44);
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        color: #ffffff;
+        box-shadow: 0 12px 26px rgba(53, 200, 159, .20);
+    }
+
+    .rp-btn-primary:hover {
+        background: linear-gradient(135deg, #39d6aa, #0f9f83);
+        color: #ffffff;
     }
 
     .rp-panel {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius);
         background:
-            radial-gradient(900px 420px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            radial-gradient(700px 420px at 85% 30%, rgba(27, 179, 242, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
         box-shadow: var(--shadow);
         overflow: hidden;
         margin-bottom: 18px;
+        backdrop-filter: blur(14px);
     }
 
     .rp-panel-head {
         padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
         font-weight: 900;
         font-size: 14px;
+        color: #17313b;
+        background: rgba(255, 255, 255, .52);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .rp-count {
+        color: #227e70;
+        font-size: 12px;
+        font-weight: 900;
+        border: 1px solid rgba(53, 200, 159, .24);
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(53, 200, 159, .10);
     }
 
     .rp-panel-body {
@@ -122,20 +177,36 @@
     .rp-field label {
         display: block;
         font-size: 12px;
-        font-weight: 800;
+        font-weight: 900;
         margin-bottom: 6px;
-        color: var(--muted);
+        color: #29414a;
+        letter-spacing: .3px;
+        text-transform: uppercase;
     }
 
     .rp-input {
         width: 100%;
         height: 42px;
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, .12);
-        background: rgba(255, 255, 255, .04);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .88);
+        color: #20313a;
         padding: 0 12px;
         outline: none;
+        font-size: 13px;
+        font-weight: 700;
+        transition: .15s ease;
+    }
+
+    .rp-input:focus {
+        border-color: rgba(53, 200, 159, .55);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .10);
+    }
+
+    .rp-input option {
+        background: #ffffff;
+        color: #20313a;
     }
 
     .rp-actions {
@@ -153,24 +224,95 @@
     .rp-table {
         width: 100%;
         border-collapse: collapse;
-        min-width: 1200px;
+        min-width: 1050px;
     }
 
     .rp-table th,
     .rp-table td {
-        padding: 12px 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
-        font-size: 12.5px;
+        padding: 9px 7px;
+        border-bottom: 1px solid rgba(25, 64, 72, .08);
+        font-size: 10.8px;
         vertical-align: middle;
     }
 
     .rp-table th {
-        color: rgba(234, 243, 248, .85);
+        color: #29414a;
         font-weight: 900;
-        font-size: 12px;
+        font-size: 10.5px;
         text-transform: uppercase;
         letter-spacing: .45px;
-        background: rgba(12, 40, 56, .22);
+        background: rgba(255, 255, 255, .66);
+    }
+
+    .rp-table td {
+        color: #40545c;
+        font-weight: 700;
+    }
+
+    .rp-table tbody tr:hover td {
+        background: rgba(53, 200, 159, .045);
+    }
+
+    .rp-state {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 900;
+        border: 1px solid rgba(25, 64, 72, .10);
+        white-space: nowrap;
+    }
+
+    .rp-state-s {
+        background: rgba(200, 149, 45, .12);
+        color: #9b6d13;
+        border-color: rgba(200, 149, 45, .22);
+    }
+
+    .rp-state-p {
+        background: rgba(53, 200, 159, .12);
+        color: #1f8f77;
+        border-color: rgba(53, 200, 159, .30);
+    }
+
+    .rp-state-e {
+        background: rgba(124, 104, 201, .12);
+        color: #6753b0;
+        border-color: rgba(124, 104, 201, .24);
+    }
+
+    .rp-state-c {
+        background: rgba(15, 143, 159, .12);
+        color: #0b7f8e;
+        border-color: rgba(15, 143, 159, .24);
+    }
+
+    .rp-type {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 9px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 900;
+        border: 1px solid rgba(25, 64, 72, .10);
+        white-space: nowrap;
+        background: rgba(255, 255, 255, .72);
+        color: #40545c;
+    }
+
+    .rp-type-emergencia {
+        background: rgba(214, 77, 77, .10);
+        color: #b43d3d;
+        border-color: rgba(214, 77, 77, .25);
+    }
+
+    .rp-type-programada {
+        background: rgba(53, 200, 159, .12);
+        color: #1f8f77;
+        border-color: rgba(53, 200, 159, .30);
     }
 
     .rp-empty {
@@ -178,12 +320,88 @@
         text-align: center;
         color: var(--muted);
         font-size: 13px;
+        font-weight: 700;
     }
 
     .rp-pagination {
         padding: 16px;
         display: flex;
         justify-content: center;
+        overflow-x: auto;
+    }
+
+    .rp-pagination nav {
+        width: auto;
+    }
+
+    .rp-pagination svg {
+        width: 16px !important;
+        height: 16px !important;
+        max-width: 16px !important;
+        max-height: 16px !important;
+        vertical-align: middle;
+    }
+
+    .rp-pagination .hidden.sm\:flex-1,
+    .rp-pagination .sm\:hidden {
+        display: none !important;
+    }
+
+    .rp-pagination .sm\:flex {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .rp-pagination [aria-label="Pagination Navigation"]>div:first-child {
+        display: none !important;
+    }
+
+    .rp-pagination [aria-label="Pagination Navigation"]>div:last-child {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .rp-pagination a,
+    .rp-pagination span[aria-current="page"] span,
+    .rp-pagination span[aria-disabled="true"] span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 13px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45 !important;
+        text-decoration: none !important;
+        font-size: 12.5px;
+        font-weight: 900;
+        line-height: 1;
+        box-shadow: none !important;
+    }
+
+    .rp-pagination a:hover {
+        border-color: rgba(53, 200, 159, .30);
+        background: #ffffff;
+        color: #253c45 !important;
+    }
+
+    .rp-pagination span[aria-current="page"] span {
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        border-color: rgba(53, 200, 159, .44);
+        color: #ffffff !important;
+    }
+
+    .rp-pagination span[aria-disabled="true"] span {
+        opacity: .45;
+        cursor: not-allowed;
     }
 </style>
 
@@ -196,13 +414,19 @@
                 <p class="rp-sub">Consulta, filtra y exporta reportes de cirugías.</p>
             </div>
 
-            <div>
-                <a class="rp-btn" href="{{ url('/home') }}">Dashboard</a>
+            <div class="rp-actions-top">
+                <a class="rp-btn" href="{{ route('home') }}">Menu Principal</a>
             </div>
         </div>
 
         <div class="rp-panel">
-            <div class="rp-panel-head">Filtros de reporte</div>
+            <div class="rp-panel-head">
+                <span>Filtros de reporte</span>
+                <span class="rp-count">
+                    Total: {{ method_exists($reportes, 'total') ? $reportes->total() : count($reportes) }}
+                </span>
+            </div>
+
             <div class="rp-panel-body">
                 <form method="GET" action="{{ route('reportes.index') }}">
                     <div class="rp-form-grid">
@@ -221,7 +445,9 @@
                             <select name="sala_operacion" class="rp-input">
                                 <option value="">Todas</option>
                                 @for($i = 1; $i <= 6; $i++)
-                                    @php $sala='SALA ' . str_pad($i, 2, '0' , STR_PAD_LEFT); @endphp
+                                    @php
+                                    $sala='SALA ' . str_pad($i, 2, '0' , STR_PAD_LEFT);
+                                    @endphp
                                     <option value="{{ $sala }}" {{ request('sala_operacion') == $sala ? 'selected' : '' }}>
                                     {{ $sala }}
                                     </option>
@@ -260,6 +486,7 @@
                             Exportar Excel
                         </a>
                         @endcan
+
                         @can('reportes.exportar')
                         <a href="{{ route('reportes.exportar.pdf', request()->query()) }}" class="rp-btn">
                             Exportar PDF
@@ -271,7 +498,10 @@
         </div>
 
         <div class="rp-panel">
-            <div class="rp-panel-head">Resultados</div>
+            <div class="rp-panel-head">
+                <span>Resultados</span>
+                <span class="rp-count">Listado quirúrgico</span>
+            </div>
 
             <div class="rp-table-wrap">
                 <table class="rp-table">
@@ -295,29 +525,51 @@
                             <th>Cirujano</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         @forelse($reportes as $r)
                         <tr>
                             <td>{{ $r->id }}</td>
-                            <td>{{ $r->tipo_solicitud }}</td>
-                            <td>{{ $r->estado }}</td>
-                            <td>{{ $r->para_el_dia }}</td>
-                            <td>{{ $r->a_horas }}</td>
-                            <td>{{ $r->fecha_programada }}</td>
-                            <td>{{ $r->hora_programada }}</td>
-                            <td>{{ $r->fecha_inicio }}</td>
-                            <td>{{ $r->hora_inicio }}</td>
-                            <td>{{ $r->fecha_culminacion }}</td>
-                            <td>{{ $r->hora_culminacion }}</td>
-                            <td>{{ $r->sala_operacion }}</td>
-                            <td>{{ $r->paciente }}</td>
-                            <td>{{ $r->operacion }}</td>
-                            <td>{{ $r->servicio }}</td>
-                            <td>{{ $r->cirujano_principal }}</td>
+
+                            <td>
+                                @if($r->tipo_solicitud === 'EMERGENCIA')
+                                <span class="rp-type rp-type-emergencia">EMERG.</span>
+                                @else
+                                <span class="rp-type rp-type-programada">PROG.</span>
+                                @endif
+                            </td>
+
+                            <td>
+                                @if($r->estado === 'P')
+                                <span class="rp-state rp-state-p">Programado</span>
+                                @elseif($r->estado === 'E')
+                                <span class="rp-state rp-state-e">En curso</span>
+                                @elseif($r->estado === 'C')
+                                <span class="rp-state rp-state-c">Culminado</span>
+                                @else
+                                <span class="rp-state rp-state-s">Solicitado</span>
+                                @endif
+                            </td>
+
+                            <td>{{ $r->para_el_dia ? \Carbon\Carbon::parse($r->para_el_dia)->format('d/m/Y') : '-' }}</td>
+                            <td>{{ $r->a_horas ? \Carbon\Carbon::parse($r->a_horas)->format('H:i') : '-' }}</td>
+                            <td>{{ $r->fecha_programada ? \Carbon\Carbon::parse($r->fecha_programada)->format('d/m/Y') : '-' }}</td>
+                            <td>{{ $r->hora_programada ? \Carbon\Carbon::parse($r->hora_programada)->format('H:i') : '-' }}</td>
+                            <td>{{ $r->fecha_inicio ? \Carbon\Carbon::parse($r->fecha_inicio)->format('d/m/Y') : '-' }}</td>
+                            <td>{{ $r->hora_inicio ? \Carbon\Carbon::parse($r->hora_inicio)->format('H:i') : '-' }}</td>
+                            <td>{{ $r->fecha_culminacion ? \Carbon\Carbon::parse($r->fecha_culminacion)->format('d/m/Y') : '-' }}</td>
+                            <td>{{ $r->hora_culminacion ? \Carbon\Carbon::parse($r->hora_culminacion)->format('H:i') : '-' }}</td>
+                            <td>{{ $r->sala_operacion ?? '-' }}</td>
+                            <td>{{ $r->paciente ?? '-' }}</td>
+                            <td>{{ $r->operacion ?? '-' }}</td>
+                            <td>{{ $r->servicio ?? '-' }}</td>
+                            <td>{{ $r->cirujano_principal ?? '-' }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="16" class="rp-empty">No hay resultados para los filtros seleccionados.</td>
+                            <td colspan="16" class="rp-empty">
+                                No hay resultados para los filtros seleccionados.
+                            </td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -326,7 +578,7 @@
 
             @if(method_exists($reportes, 'links'))
             <div class="rp-pagination">
-                {{ $reportes->links() }}
+                {{ $reportes->appends(request()->query())->links() }}
             </div>
             @endif
         </div>

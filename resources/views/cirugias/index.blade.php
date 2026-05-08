@@ -3,41 +3,59 @@
 @section('content')
 <style>
     :root {
-        --bg0: #061218;
-        --bg1: #0a1d28;
-        --line: rgba(255, 255, 255, .12);
-        --text: #eaf3f8;
-        --muted: rgba(234, 243, 248, .72);
-        --primary: #2bd4c5;
-        --primary2: #1bb3f2;
-        --warning: #ffd36b;
-        --success: #2bd4c5;
-        --danger: #ff6b6b;
-        --violet: #9b7bff;
-        --shadow: 0 18px 60px rgba(0, 0, 0, .45);
-        --radius: 18px;
+        --bg0: #eef4f2;
+        --bg1: #f8fbfa;
+        --line: rgba(25, 64, 72, .12);
+        --text: #20313a;
+        --muted: #6f7f86;
+        --primary: #35c89f;
+        --primary2: #0f8f9f;
+        --warning: #c8952d;
+        --success: #2fbe8f;
+        --danger: #d64d4d;
+        --violet: #7c68c9;
+        --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+        --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+        --radius: 22px;
     }
 
     .cx-page {
         min-height: calc(100vh - 80px);
-        padding: 24px 0 36px;
+        padding: 32px 0 42px;
         background:
-            radial-gradient(1100px 650px at 12% 10%, rgba(43, 212, 197, .10), transparent 60%),
-            radial-gradient(900px 520px at 90% 15%, rgba(27, 179, 242, .10), transparent 55%),
-            linear-gradient(180deg, var(--bg0), var(--bg1));
+            radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .18), transparent 58%),
+            radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .12), transparent 55%),
+            linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 48%, #eaf2f0 100%);
         color: var(--text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .cx-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .24;
+        background-image:
+            linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
     }
 
     .cx-container {
         width: min(1380px, 96vw);
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .cx-head {
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        gap: 12px;
+        gap: 16px;
         flex-wrap: wrap;
         margin-bottom: 18px;
     }
@@ -46,13 +64,15 @@
         margin: 0;
         font-size: 30px;
         font-weight: 900;
-        letter-spacing: .2px;
+        letter-spacing: -.4px;
+        color: #172f3a;
     }
 
     .cx-sub {
         margin: 6px 0 0;
         color: var(--muted);
-        font-size: 13px;
+        font-size: 13.5px;
+        line-height: 1.7;
     }
 
     .cx-top-actions {
@@ -66,39 +86,47 @@
         align-items: center;
         justify-content: center;
         padding: 10px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         text-decoration: none;
         font-size: 12.5px;
-        font-weight: 800;
-        transition: .2s ease;
+        font-weight: 900;
+        transition: .15s ease;
         cursor: pointer;
     }
 
     .cx-btn:hover {
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text);
-        text-decoration: none;
         transform: translateY(-1px);
+        background: #ffffff;
+        border-color: rgba(53, 200, 159, .30);
+        box-shadow: 0 10px 26px rgba(35, 64, 70, .10);
+        color: #253c45;
+        text-decoration: none;
     }
 
     .cx-btn-primary {
-        background: linear-gradient(135deg, rgba(43, 212, 197, .20), rgba(27, 179, 242, .20));
-        border-color: rgba(43, 212, 197, .28);
+        border-color: rgba(53, 200, 159, .44);
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        color: #ffffff;
+        box-shadow: 0 12px 26px rgba(53, 200, 159, .20);
+    }
+
+    .cx-btn-primary:hover {
+        background: linear-gradient(135deg, #39d6aa, #0f9f83);
+        color: #ffffff;
     }
 
     .cx-filter {
         margin-bottom: 18px;
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius);
         background:
-            radial-gradient(700px 240px at 18% 20%, rgba(43, 212, 197, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .66), rgba(12, 40, 56, .34));
-        box-shadow: var(--shadow);
-        padding: 14px 16px;
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
+        box-shadow: var(--shadow2);
+        padding: 16px;
     }
 
     .cx-filter-form {
@@ -114,7 +142,7 @@
     }
 
     .cx-filter-group label {
-        color: var(--muted);
+        color: #29414a;
         font-size: 11.5px;
         font-weight: 900;
         text-transform: uppercase;
@@ -125,18 +153,19 @@
     .cx-input {
         min-width: 170px;
         padding: 10px 12px;
-        border-radius: 13px;
-        border: 1px solid var(--line);
-        background: rgba(6, 18, 24, .50);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .88);
+        color: #20313a;
         outline: none;
         font-size: 13px;
         font-weight: 700;
     }
 
     .cx-input:focus {
-        border-color: rgba(43, 212, 197, .45);
-        box-shadow: 0 0 0 3px rgba(43, 212, 197, .10);
+        border-color: rgba(53, 200, 159, .55);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .10);
     }
 
     .cx-grid-kpi {
@@ -160,12 +189,12 @@
 
     .cx-card {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius);
         background:
-            radial-gradient(700px 240px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
-        box-shadow: var(--shadow);
-        padding: 16px;
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .10), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
+        box-shadow: var(--shadow2);
+        padding: 18px;
         position: relative;
         overflow: hidden;
     }
@@ -173,34 +202,42 @@
     .cx-card::after {
         content: "";
         position: absolute;
-        right: -20px;
-        top: -20px;
-        width: 90px;
-        height: 90px;
+        right: -30px;
+        top: -30px;
+        width: 110px;
+        height: 110px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(255, 255, 255, .08), transparent 65%);
+        background: radial-gradient(circle, rgba(53, 200, 159, .16), transparent 65%);
         pointer-events: none;
     }
 
     .cx-card-label {
         color: var(--muted);
         font-size: 11.5px;
-        font-weight: 800;
+        font-weight: 900;
         margin-bottom: 8px;
         text-transform: uppercase;
         letter-spacing: .6px;
+        position: relative;
+        z-index: 1;
     }
 
     .cx-card-value {
         font-size: 30px;
         font-weight: 900;
         line-height: 1;
+        color: #172f3a;
+        position: relative;
+        z-index: 1;
     }
 
     .cx-card-note {
         margin-top: 8px;
         font-size: 12px;
         color: var(--muted);
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
     }
 
     .cx-card-mini {
@@ -211,9 +248,12 @@
         padding: 5px 9px;
         border-radius: 999px;
         font-size: 11px;
-        font-weight: 800;
-        border: 1px solid rgba(255, 255, 255, .10);
-        background: rgba(255, 255, 255, .04);
+        font-weight: 900;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .72);
+        color: #40545c;
+        position: relative;
+        z-index: 1;
     }
 
     .cx-row {
@@ -244,38 +284,41 @@
 
     .cx-panel {
         border: 1px solid var(--line);
-        border-radius: 18px;
+        border-radius: var(--radius);
         background:
-            radial-gradient(900px 420px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            radial-gradient(700px 420px at 85% 30%, rgba(27, 179, 242, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
         box-shadow: var(--shadow);
         overflow: hidden;
+        backdrop-filter: blur(14px);
     }
 
     .cx-panel-head {
         padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
         flex-wrap: wrap;
+        background: rgba(255, 255, 255, .52);
     }
 
     .cx-panel-title {
         font-weight: 900;
         font-size: 14px;
         letter-spacing: .3px;
+        color: #17313b;
     }
 
     .cx-count {
-        color: var(--muted);
+        color: #227e70;
         font-size: 12px;
-        border: 1px solid var(--line);
+        font-weight: 900;
+        border: 1px solid rgba(53, 200, 159, .24);
         padding: 6px 10px;
         border-radius: 999px;
-        background: rgba(12, 40, 56, .30);
+        background: rgba(53, 200, 159, .10);
     }
 
     .cx-panel-body {
@@ -307,22 +350,26 @@
     .cx-table th,
     .cx-table td {
         padding: 12px 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, .08);
+        border-bottom: 1px solid rgba(25, 64, 72, .08);
         font-size: 12.5px;
         vertical-align: middle;
     }
 
     .cx-table th {
-        color: rgba(234, 243, 248, .85);
+        color: #29414a;
         font-weight: 900;
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: .45px;
-        background: rgba(12, 40, 56, .22);
+        background: rgba(255, 255, 255, .66);
+    }
+
+    .cx-table td {
+        color: #40545c;
     }
 
     .cx-table tr:hover td {
-        background: rgba(255, 255, 255, .025);
+        background: rgba(53, 200, 159, .045);
     }
 
     .cx-badge {
@@ -331,10 +378,11 @@
         gap: 6px;
         padding: 5px 8px;
         border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .25);
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .72);
+        color: #40545c;
         font-size: 11px;
-        font-weight: 800;
+        font-weight: 900;
         letter-spacing: .2px;
         white-space: nowrap;
     }
@@ -344,22 +392,27 @@
         height: 8px;
         border-radius: 999px;
         background: var(--primary);
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .12);
     }
 
     .cx-dot.red {
         background: var(--danger);
+        box-shadow: 0 0 0 4px rgba(214, 77, 77, .12);
     }
 
     .cx-dot.blue {
         background: var(--primary2);
+        box-shadow: 0 0 0 4px rgba(15, 143, 159, .12);
     }
 
     .cx-dot.yellow {
         background: var(--warning);
+        box-shadow: 0 0 0 4px rgba(200, 149, 45, .12);
     }
 
     .cx-dot.violet {
         background: var(--violet);
+        box-shadow: 0 0 0 4px rgba(124, 104, 201, .12);
     }
 
     .cx-state {
@@ -369,33 +422,33 @@
         padding: 5px 10px;
         border-radius: 999px;
         font-size: 11px;
-        font-weight: 800;
-        border: 1px solid rgba(255, 255, 255, .12);
+        font-weight: 900;
+        border: 1px solid rgba(25, 64, 72, .10);
         white-space: nowrap;
     }
 
     .cx-state-p {
-        background: rgba(43, 212, 197, .12);
-        color: #2bd4c5;
-        border-color: rgba(43, 212, 197, .28);
+        background: rgba(53, 200, 159, .12);
+        color: #1f8f77;
+        border-color: rgba(53, 200, 159, .30);
     }
 
     .cx-state-e {
-        background: rgba(155, 123, 255, .12);
-        color: #c7b5ff;
-        border-color: rgba(155, 123, 255, .30);
+        background: rgba(124, 104, 201, .12);
+        color: #6753b0;
+        border-color: rgba(124, 104, 201, .24);
     }
 
     .cx-state-c {
-        background: rgba(27, 179, 242, .12);
-        color: #7fd8ff;
-        border-color: rgba(27, 179, 242, .28);
+        background: rgba(15, 143, 159, .12);
+        color: #0b7f8e;
+        border-color: rgba(15, 143, 159, .24);
     }
 
     .cx-state-s {
-        background: rgba(255, 193, 7, .12);
-        color: #ffd36b;
-        border-color: rgba(255, 193, 7, .28);
+        background: rgba(200, 149, 45, .12);
+        color: #9b6d13;
+        border-color: rgba(200, 149, 45, .22);
     }
 
     .cx-list {
@@ -404,10 +457,11 @@
     }
 
     .cx-item {
-        border: 1px solid rgba(255, 255, 255, .08);
-        border-radius: 14px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        border-radius: 16px;
         padding: 12px;
-        background: rgba(255, 255, 255, .03);
+        background: rgba(255, 255, 255, .66);
+        box-shadow: 0 8px 24px rgba(35, 64, 70, .07);
     }
 
     .cx-item-top {
@@ -421,12 +475,13 @@
     .cx-item-title {
         font-size: 13px;
         font-weight: 900;
-        color: var(--text);
+        color: #17313b;
     }
 
     .cx-item-sub {
         font-size: 12px;
         color: var(--muted);
+        line-height: 1.5;
     }
 
     .cx-empty {
@@ -440,7 +495,7 @@
         width: 100%;
         height: 9px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, .08);
+        background: rgba(25, 64, 72, .08);
         overflow: hidden;
         margin-top: 8px;
     }
@@ -477,6 +532,7 @@
 
     .cx-strong {
         font-weight: 900;
+        color: #17313b;
     }
 </style>
 
@@ -551,7 +607,7 @@ $estadoSolicitado = (int) $solicitadas;
             </div>
 
             <div class="cx-top-actions">
-                <a class="cx-btn" href="{{ url('/home') }}">Dashboard</a>
+                <a class="cx-btn" href="{{ route('home') }}">Menu Principal</a>
                 <a class="cx-btn" href="{{ route('cirugias.panel_tv') }}">Panel TV</a>
                 <a class="cx-btn cx-btn-primary" href="javascript:void(0)" onclick="window.print()">Imprimir</a>
             </div>
@@ -666,11 +722,13 @@ $estadoSolicitado = (int) $solicitadas;
                     <div class="cx-panel-title">Resumen ejecutivo</div>
                     <div class="cx-count">{{ $textoFiltro }}</div>
                 </div>
+
                 <div class="cx-panel-body">
                     <div class="cx-stat-line">
                         <span class="cx-muted">Avance quirúrgico general</span>
                         <span class="cx-strong">{{ $ocupacionPct }}%</span>
                     </div>
+
                     <div class="cx-progress">
                         <div class="cx-progress-bar" style="width: {{ $ocupacionPct }}%;"></div>
                     </div>
@@ -749,11 +807,13 @@ $estadoSolicitado = (int) $solicitadas;
                                     {{ $fechaMostrar($p) }} -
                                     {{ $p->hora_programada ? \Carbon\Carbon::parse($p->hora_programada)->format('H:i') : '-' }}
                                 </div>
+
                                 <span class="cx-badge">
                                     <span class="cx-dot {{ strtoupper($p->tipo_solicitud ?? '') === 'EMERGENCIA' ? 'red' : '' }}"></span>
                                     {{ strtoupper($p->tipo_solicitud ?? 'PROGRAMADA') }}
                                 </span>
                             </div>
+
                             <div class="cx-item-sub"><strong>Paciente:</strong> {{ $p->paciente ?? '-' }}</div>
                             <div class="cx-item-sub"><strong>Operación:</strong> {{ $p->operacion ?? '-' }}</div>
                             <div class="cx-item-sub"><strong>Sala:</strong> {{ $p->sala_operacion ?? '-' }}</div>
@@ -787,6 +847,7 @@ $estadoSolicitado = (int) $solicitadas;
                                 <th>Estado</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             @forelse($cirugiasHoy as $c)
                             <tr>
@@ -838,13 +899,15 @@ $estadoSolicitado = (int) $solicitadas;
                     <div class="cx-panel-title">Alertas y ranking rápido</div>
                     <div class="cx-count">Vista lateral</div>
                 </div>
-                <div class="cx-panel-body">
 
+                <div class="cx-panel-body">
                     <div class="cx-split">
                         <div class="cx-item">
                             <div class="cx-item-title">Emergencias</div>
                             <div class="cx-item-sub">Casos críticos registrados</div>
-                            <div class="cx-card-value" style="font-size: 26px; margin-top: 8px;">{{ $emergencias }}</div>
+                            <div class="cx-card-value" style="font-size: 26px; margin-top: 8px;">
+                                {{ $emergencias }}
+                            </div>
                         </div>
 
                         <div class="cx-item">
@@ -860,15 +923,18 @@ $estadoSolicitado = (int) $solicitadas;
 
                     <div class="cx-item">
                         <div class="cx-item-title" style="margin-bottom:10px;">Ranking por sala</div>
+
                         @forelse($porSala as $sala => $cantidad)
                         @php
                         $porcentajeSala = $totalHoy > 0 ? round(($cantidad / $totalHoy) * 100) : 0;
                         @endphp
+
                         <div style="margin-bottom: 12px;">
                             <div class="cx-stat-line" style="margin-bottom: 6px;">
                                 <span class="cx-muted">{{ $sala }}</span>
                                 <span class="cx-strong">{{ $cantidad }}</span>
                             </div>
+
                             <div class="cx-progress">
                                 <div class="cx-progress-bar" style="width: {{ $porcentajeSala }}%;"></div>
                             </div>
@@ -882,8 +948,9 @@ $estadoSolicitado = (int) $solicitadas;
 
                     <div class="cx-item">
                         <div class="cx-item-title" style="margin-bottom:10px;">Listado de emergencias</div>
+
                         @forelse($cirugiasEmergencia->take(4) as $e)
-                        <div style="padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08);">
+                        <div style="padding:8px 0; border-bottom:1px solid rgba(25,64,72,.10);">
                             <div class="cx-item-sub">
                                 <strong>{{ $fechaMostrar($e) }}</strong>
                                 —
@@ -896,15 +963,14 @@ $estadoSolicitado = (int) $solicitadas;
                         <div class="cx-empty" style="padding: 8px 0 0;">No se registran emergencias.</div>
                         @endforelse
                     </div>
-
                 </div>
             </div>
         </div>
 
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const salaLabels = @json($chartSalaLabels);
@@ -923,7 +989,7 @@ $estadoSolicitado = (int) $solicitadas;
             plugins: {
                 legend: {
                     labels: {
-                        color: '#eaf3f8',
+                        color: '#20313a',
                         font: {
                             size: 12,
                             weight: 'bold'
@@ -931,30 +997,30 @@ $estadoSolicitado = (int) $solicitadas;
                     }
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(6, 18, 24, 0.95)',
-                    titleColor: '#fff',
-                    bodyColor: '#eaf3f8',
-                    borderColor: 'rgba(255,255,255,.12)',
+                    backgroundColor: 'rgba(23, 47, 58, 0.95)',
+                    titleColor: '#ffffff',
+                    bodyColor: '#f8fbfa',
+                    borderColor: 'rgba(25,64,72,.12)',
                     borderWidth: 1
                 }
             },
             scales: {
                 x: {
                     ticks: {
-                        color: 'rgba(234,243,248,.75)'
+                        color: '#6f7f86'
                     },
                     grid: {
-                        color: 'rgba(255,255,255,.06)'
+                        color: 'rgba(25,64,72,.08)'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        color: 'rgba(234,243,248,.75)',
+                        color: '#6f7f86',
                         precision: 0
                     },
                     grid: {
-                        color: 'rgba(255,255,255,.06)'
+                        color: 'rgba(25,64,72,.08)'
                     }
                 }
             }
@@ -970,18 +1036,23 @@ $estadoSolicitado = (int) $solicitadas;
                 data: {
                     labels: ['Programadas', 'En curso', 'Culminadas', 'Solicitadas'],
                     datasets: [{
-                        data: [estadoProgramado, estadoEnCurso, estadoCulminado, estadoSolicitado],
+                        data: [
+                            estadoProgramado,
+                            estadoEnCurso,
+                            estadoCulminado,
+                            estadoSolicitado
+                        ],
                         backgroundColor: [
-                            'rgba(43, 212, 197, 0.85)',
-                            'rgba(155, 123, 255, 0.85)',
-                            'rgba(27, 179, 242, 0.85)',
-                            'rgba(255, 211, 107, 0.90)'
+                            'rgba(53, 200, 159, 0.85)',
+                            'rgba(124, 104, 201, 0.85)',
+                            'rgba(15, 143, 159, 0.85)',
+                            'rgba(200, 149, 45, 0.90)'
                         ],
                         borderColor: [
-                            'rgba(43, 212, 197, 1)',
-                            'rgba(155, 123, 255, 1)',
-                            'rgba(27, 179, 242, 1)',
-                            'rgba(255, 211, 107, 1)'
+                            'rgba(53, 200, 159, 1)',
+                            'rgba(124, 104, 201, 1)',
+                            'rgba(15, 143, 159, 1)',
+                            'rgba(200, 149, 45, 1)'
                         ],
                         borderWidth: 2
                     }]
@@ -994,12 +1065,19 @@ $estadoSolicitado = (int) $solicitadas;
                         legend: {
                             position: 'bottom',
                             labels: {
-                                color: '#eaf3f8',
+                                color: '#20313a',
                                 font: {
                                     size: 12,
                                     weight: 'bold'
                                 }
                             }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(23, 47, 58, 0.95)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#f8fbfa',
+                            borderColor: 'rgba(25,64,72,.12)',
+                            borderWidth: 1
                         }
                     }
                 }
@@ -1014,8 +1092,8 @@ $estadoSolicitado = (int) $solicitadas;
                     datasets: [{
                         label: 'Cirugías',
                         data: salaData,
-                        backgroundColor: 'rgba(27, 179, 242, 0.65)',
-                        borderColor: 'rgba(27, 179, 242, 1)',
+                        backgroundColor: 'rgba(15, 143, 159, 0.65)',
+                        borderColor: 'rgba(15, 143, 159, 1)',
                         borderWidth: 1.5,
                         borderRadius: 8
                     }]
@@ -1034,10 +1112,10 @@ $estadoSolicitado = (int) $solicitadas;
                         data: horaData,
                         fill: true,
                         tension: 0.35,
-                        backgroundColor: 'rgba(43, 212, 197, 0.14)',
-                        borderColor: 'rgba(43, 212, 197, 1)',
-                        pointBackgroundColor: 'rgba(43, 212, 197, 1)',
-                        pointBorderColor: '#fff',
+                        backgroundColor: 'rgba(53, 200, 159, 0.14)',
+                        borderColor: 'rgba(53, 200, 159, 1)',
+                        pointBackgroundColor: 'rgba(53, 200, 159, 1)',
+                        pointBorderColor: '#ffffff',
                         pointRadius: 4
                     }]
                 },

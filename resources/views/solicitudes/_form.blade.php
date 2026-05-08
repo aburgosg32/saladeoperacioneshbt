@@ -8,32 +8,53 @@ $esEdicion = isset($solicitud);
 
 <style>
     :root {
-        --bg0: #061218;
-        --bg1: #0a1d28;
-        --panel: rgba(12, 40, 56, .62);
-        --panel2: rgba(12, 40, 56, .35);
-        --line: rgba(255, 255, 255, .12);
-        --text: #eaf3f8;
-        --muted: rgba(234, 243, 248, .72);
-        --primary: #2bd4c5;
-        --primary2: #1bb3f2;
-        --shadow: 0 18px 60px rgba(0, 0, 0, .45);
-        --radius: 18px;
+        --bg0: #eef4f2;
+        --bg1: #f8fbfa;
+        --panel: rgba(255, 255, 255, .88);
+        --panel2: rgba(255, 255, 255, .72);
+        --line: rgba(25, 64, 72, .12);
+        --text: #20313a;
+        --muted: #6f7f86;
+        --primary: #35c89f;
+        --primary2: #0f8f9f;
+        --ok: #2fbe8f;
+        --danger: #d64d4d;
+        --warning: #c8952d;
+        --shadow: 0 22px 60px rgba(35, 64, 70, .14);
+        --shadow2: 0 10px 30px rgba(35, 64, 70, .10);
+        --radius: 22px;
     }
 
     .or-page {
         min-height: calc(100vh - 80px);
-        padding: 22px 0 34px;
+        padding: 32px 0 42px;
         background:
-            radial-gradient(1100px 650px at 12% 10%, rgba(43, 212, 197, .10), transparent 60%),
-            radial-gradient(900px 520px at 90% 15%, rgba(27, 179, 242, .10), transparent 55%),
-            linear-gradient(180deg, var(--bg0), var(--bg1));
+            radial-gradient(900px 520px at 12% 12%, rgba(53, 200, 159, .18), transparent 58%),
+            radial-gradient(900px 520px at 92% 18%, rgba(15, 143, 159, .12), transparent 55%),
+            linear-gradient(135deg, var(--bg0) 0%, var(--bg1) 48%, #eaf2f0 100%);
         color: var(--text);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .or-page::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: .24;
+        background-image:
+            linear-gradient(to right, rgba(25, 64, 72, .07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(25, 64, 72, .07) 1px, transparent 1px);
+        background-size: 46px 46px;
+        mask-image: radial-gradient(circle at 42% 30%, black 0%, transparent 68%);
     }
 
     .or-container {
         width: min(1100px, 92vw);
         margin: 0 auto;
+        position: relative;
+        z-index: 1;
     }
 
     .or-head {
@@ -47,16 +68,17 @@ $esEdicion = isset($solicitud);
 
     .or-title {
         margin: 0;
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 900;
-        letter-spacing: -.2px;
+        letter-spacing: -.3px;
+        color: #172f3a;
     }
 
     .or-sub {
         margin: 6px 0 0;
         color: var(--muted);
-        font-size: 12.5px;
-        line-height: 1.6;
+        font-size: 13px;
+        line-height: 1.7;
     }
 
     .or-actions {
@@ -72,68 +94,75 @@ $esEdicion = isset($solicitud);
         justify-content: center;
         gap: 10px;
         padding: 10px 14px;
-        border-radius: 14px;
-        border: 1px solid var(--line);
-        background: rgba(12, 40, 56, .35);
-        color: var(--text);
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .78);
+        color: #253c45;
         text-decoration: none;
         font-size: 12.5px;
-        font-weight: 800;
-        transition: transform .15s ease, border-color .15s ease, background .15s ease;
+        font-weight: 900;
+        transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
         white-space: nowrap;
     }
 
     .or-btn:hover {
         transform: translateY(-1px);
-        border-color: rgba(27, 179, 242, .45);
-        background: rgba(12, 40, 56, .55);
-        color: var(--text);
+        border-color: rgba(53, 200, 159, .30);
+        background: #ffffff;
+        color: #253c45;
+        box-shadow: 0 10px 26px rgba(35, 64, 70, .10);
     }
 
     .or-btn-primary {
-        border-color: rgba(43, 212, 197, .60);
-        background: linear-gradient(135deg, rgba(43, 212, 197, .18), rgba(27, 179, 242, .14));
+        border-color: rgba(53, 200, 159, .44);
+        background: linear-gradient(135deg, #35c89f, #13a889);
+        color: #ffffff;
+        box-shadow: 0 12px 26px rgba(53, 200, 159, .20);
     }
 
     .or-btn-primary:hover {
-        border-color: rgba(43, 212, 197, .90);
+        border-color: rgba(19, 168, 137, .70);
+        background: linear-gradient(135deg, #39d6aa, #0f9f83);
+        color: #ffffff;
     }
 
     .or-panel {
         border: 1px solid var(--line);
         border-radius: var(--radius);
         background:
-            radial-gradient(900px 420px at 18% 20%, rgba(43, 212, 197, .10), transparent 55%),
-            radial-gradient(700px 420px at 85% 30%, rgba(27, 179, 242, .08), transparent 55%),
-            linear-gradient(180deg, rgba(12, 40, 56, .78), rgba(12, 40, 56, .40));
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .94), rgba(255, 255, 255, .76));
         box-shadow: var(--shadow);
         overflow: hidden;
-        backdrop-filter: blur(10px);
+        backdrop-filter: blur(14px);
     }
 
     .or-panel-head {
         padding: 14px 16px;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
         flex-wrap: wrap;
+        background: rgba(255, 255, 255, .52);
     }
 
     .or-panel-head .label {
         font-weight: 900;
         font-size: 13px;
         letter-spacing: .2px;
+        color: #17313b;
     }
 
     .or-count {
-        color: var(--muted);
+        color: #227e70;
         font-size: 12px;
-        border: 1px solid var(--line);
+        font-weight: 900;
+        border: 1px solid rgba(53, 200, 159, .24);
         padding: 6px 10px;
         border-radius: 999px;
-        background: rgba(12, 40, 56, .30);
+        background: rgba(53, 200, 159, .10);
     }
 
     .or-panel-body {
@@ -141,10 +170,13 @@ $esEdicion = isset($solicitud);
     }
 
     .paper {
-        border: 1px solid rgba(255, 255, 255, .10);
-        border-radius: 18px;
-        background: rgba(6, 18, 24, .25);
+        border: 1px solid rgba(25, 64, 72, .10);
+        border-radius: var(--radius);
+        background:
+            radial-gradient(500px 260px at 16% 12%, rgba(53, 200, 159, .08), transparent 58%),
+            linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .80));
         overflow: hidden;
+        box-shadow: var(--shadow2);
     }
 
     .paper-head {
@@ -153,8 +185,8 @@ $esEdicion = isset($solicitud);
         justify-content: space-between;
         gap: 14px;
         padding: 16px;
-        border-bottom: 1px solid rgba(255, 255, 255, .10);
-        background: rgba(12, 40, 56, .25);
+        border-bottom: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .56);
         flex-wrap: wrap;
     }
 
@@ -164,6 +196,7 @@ $esEdicion = isset($solicitud);
         font-weight: 900;
         letter-spacing: .5px;
         text-transform: uppercase;
+        color: #17313b;
     }
 
     .paper-meta {
@@ -171,6 +204,7 @@ $esEdicion = isset($solicitud);
         font-size: 12px;
         color: var(--muted);
         line-height: 1.5;
+        font-weight: 700;
     }
 
     .paper-grid {
@@ -181,10 +215,11 @@ $esEdicion = isset($solicitud);
     }
 
     .field {
-        border: 1px solid rgba(255, 255, 255, .10);
-        background: rgba(12, 40, 56, .22);
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .66);
         border-radius: 16px;
         padding: 10px 10px 12px;
+        box-shadow: 0 8px 24px rgba(35, 64, 70, .05);
     }
 
     .field label {
@@ -193,7 +228,7 @@ $esEdicion = isset($solicitud);
         font-weight: 900;
         letter-spacing: .4px;
         text-transform: uppercase;
-        color: rgba(234, 243, 248, .80);
+        color: #29414a;
         margin-bottom: 6px;
     }
 
@@ -201,14 +236,15 @@ $esEdicion = isset($solicitud);
     .select,
     .textarea {
         width: 100%;
-        border-radius: 14px;
-        border: 1px solid rgba(255, 255, 255, .10);
-        background: rgba(6, 18, 24, .35);
-        color: var(--text);
-        padding: 10px 10px;
+        border-radius: 15px;
+        border: 1px solid rgba(25, 64, 72, .10);
+        background: rgba(255, 255, 255, .88);
+        color: #20313a;
+        padding: 10px 12px;
         outline: none;
         font-size: 13px;
-        transition: border-color .15s ease, background .15s ease;
+        font-weight: 700;
+        transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
     }
 
     .textarea {
@@ -219,22 +255,33 @@ $esEdicion = isset($solicitud);
     .input:focus,
     .select:focus,
     .textarea:focus {
-        border-color: rgba(43, 212, 197, .75);
-        background: rgba(6, 18, 24, .55);
+        border-color: rgba(53, 200, 159, .55);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .10);
+    }
+
+    .input[readonly],
+    .textarea[readonly],
+    .input:disabled,
+    .select:disabled,
+    .textarea:disabled {
+        background: rgba(238, 244, 242, .80);
+        color: #6f7f86;
+        cursor: not-allowed;
     }
 
     .input.is-invalid,
     .select.is-invalid,
     .textarea.is-invalid {
-        border-color: rgba(255, 107, 107, .85) !important;
-        box-shadow: 0 0 0 3px rgba(255, 107, 107, .12);
+        border-color: rgba(214, 77, 77, .70) !important;
+        box-shadow: 0 0 0 4px rgba(214, 77, 77, .10);
     }
 
     .field-error {
         margin-top: 6px;
         font-size: 12px;
         font-weight: 800;
-        color: rgba(255, 107, 107, .95);
+        color: #d64d4d;
         line-height: 1.4;
     }
 
@@ -242,14 +289,15 @@ $esEdicion = isset($solicitud);
         margin-top: 6px;
         font-size: 12px;
         color: var(--muted);
+        font-weight: 700;
     }
 
     .help.ok {
-        color: rgba(43, 212, 197, .95);
+        color: #1f8f77;
     }
 
     .help.err {
-        color: rgba(255, 107, 107, .95);
+        color: #d64d4d;
     }
 
     .c12 {
@@ -294,26 +342,27 @@ $esEdicion = isset($solicitud);
     .divider {
         grid-column: span 12;
         height: 1px;
-        background: rgba(255, 255, 255, .10);
+        background: rgba(25, 64, 72, .10);
         margin: 4px 0;
     }
 
     .server-error {
-        border: 1px solid rgba(255, 107, 107, .35);
-        background: rgba(255, 107, 107, .08);
-        color: rgba(234, 243, 248, .92);
+        border: 1px solid rgba(214, 77, 77, .30);
+        background: rgba(214, 77, 77, .08);
+        color: #40545c;
         padding: 12px 14px;
         border-radius: 16px;
         font-size: 12.5px;
         font-weight: 700;
         margin-bottom: 12px;
+        box-shadow: var(--shadow2);
     }
 
     .server-error-title {
         font-size: 14px;
         font-weight: 900;
         margin-bottom: 8px;
-        color: #ff9a9a;
+        color: #b43d3d;
     }
 
     .server-error ul {
@@ -323,8 +372,9 @@ $esEdicion = isset($solicitud);
     }
 
     #paciente {
-        font-weight: 600;
+        font-weight: 800;
         letter-spacing: .2px;
+        color: #20313a;
     }
 
     .select2-container {
@@ -333,12 +383,18 @@ $esEdicion = isset($solicitud);
 
     .select2-container--bootstrap-5 .select2-selection {
         min-height: 44px !important;
-        border-radius: 14px !important;
-        border: 1px solid rgba(255, 255, 255, .10) !important;
-        background: rgba(6, 18, 24, .35) !important;
-        color: #eaf3f8 !important;
+        border-radius: 15px !important;
+        border: 1px solid rgba(25, 64, 72, .10) !important;
+        background: rgba(255, 255, 255, .88) !important;
+        color: #20313a !important;
         padding: 6px 10px !important;
         box-shadow: none !important;
+    }
+
+    .select2-container--bootstrap-5.select2-container--focus .select2-selection {
+        border-color: rgba(53, 200, 159, .55) !important;
+        box-shadow: 0 0 0 4px rgba(53, 200, 159, .10) !important;
+        background: #ffffff !important;
     }
 
     .select2-container--bootstrap-5 .select2-selection--single {
@@ -347,14 +403,15 @@ $esEdicion = isset($solicitud);
     }
 
     .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        color: #eaf3f8 !important;
+        color: #20313a !important;
         padding-left: 0 !important;
         padding-right: 22px !important;
         line-height: 1.4 !important;
+        font-weight: 700 !important;
     }
 
     .select2-container--bootstrap-5 .select2-selection--single .select2-selection__placeholder {
-        color: rgba(234, 243, 248, .55) !important;
+        color: rgba(32, 49, 58, .45) !important;
     }
 
     .select2-container--bootstrap-5 .select2-selection__arrow {
@@ -362,51 +419,54 @@ $esEdicion = isset($solicitud);
     }
 
     .select2-container--bootstrap-5 .select2-dropdown {
-        background: #0a1d28 !important;
-        border: 1px solid rgba(255, 255, 255, .12) !important;
-        border-radius: 12px !important;
+        background: #ffffff !important;
+        border: 1px solid rgba(25, 64, 72, .10) !important;
+        border-radius: 14px !important;
         overflow: hidden !important;
+        box-shadow: 0 12px 32px rgba(35, 64, 70, .14) !important;
     }
 
     .select2-container--bootstrap-5 .select2-search {
         padding: 8px !important;
-        background: #0a1d28 !important;
+        background: #ffffff !important;
     }
 
     .select2-container--bootstrap-5 .select2-search__field {
         width: 100% !important;
-        background: rgba(6, 18, 24, .55) !important;
-        color: #eaf3f8 !important;
-        border: 1px solid rgba(255, 255, 255, .10) !important;
-        border-radius: 10px !important;
+        background: rgba(248, 251, 250, .95) !important;
+        color: #20313a !important;
+        border: 1px solid rgba(25, 64, 72, .10) !important;
+        border-radius: 12px !important;
         padding: 8px 10px !important;
         outline: none !important;
+        font-weight: 700 !important;
     }
 
     .select2-container--bootstrap-5 .select2-results__options {
-        background: #0a1d28 !important;
+        background: #ffffff !important;
     }
 
     .select2-container--bootstrap-5 .select2-results__option {
-        color: #eaf3f8 !important;
+        color: #20313a !important;
         padding: 10px 12px !important;
         font-size: 13px !important;
+        font-weight: 700 !important;
     }
 
     .select2-container--bootstrap-5 .select2-results__option--highlighted {
-        background: rgba(27, 179, 242, .25) !important;
-        color: #fff !important;
+        background: rgba(53, 200, 159, .12) !important;
+        color: #17313b !important;
     }
 
     .select2-container--bootstrap-5 .select2-results__option--selected {
-        background: rgba(43, 212, 197, .18) !important;
-        color: #fff !important;
+        background: rgba(15, 143, 159, .10) !important;
+        color: #0b7f8e !important;
     }
 
     .programacion-box {
         grid-column: span 12;
-        border: 1px solid rgba(27, 179, 242, .28);
-        background: rgba(27, 179, 242, .08);
+        border: 1px solid rgba(15, 143, 159, .20);
+        background: rgba(15, 143, 159, .07);
         border-radius: 18px;
         padding: 14px;
     }
@@ -417,14 +477,15 @@ $esEdicion = isset($solicitud);
         font-weight: 900;
         letter-spacing: .4px;
         text-transform: uppercase;
-        color: #7fd8ff;
+        color: #0b7f8e;
     }
 
     .programacion-sub {
         margin: 0 0 12px;
         font-size: 12px;
-        color: rgba(234, 243, 248, .70);
+        color: var(--muted);
         line-height: 1.5;
+        font-weight: 700;
     }
 
     .programacion-grid {
