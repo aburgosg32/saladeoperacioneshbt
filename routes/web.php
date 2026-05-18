@@ -40,6 +40,8 @@ Route::middleware('auth')->group(function () {
         ->name('cirugias.panel_tv');
     Route::get('/ejecucion-cirugias', [EjecucionCirugiaController::class, 'index'])
         ->name('ejecucion-cirugias.index');
+    Route::get('/cirugias/salas', [App\Http\Controllers\CirugiaController::class, 'salas'])
+        ->name('cirugias.salas');
 
     Route::put('/ejecucion-cirugias/{id}/iniciar', [EjecucionCirugiaController::class, 'iniciar'])
         ->name('ejecucion-cirugias.iniciar');

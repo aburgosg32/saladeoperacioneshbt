@@ -139,4 +139,28 @@ class CirugiaController extends Controller
             'proximaCirugia'
         ));
     }
+    public function salas()
+    {
+        $hoy = \Carbon\Carbon::today()->toDateString();
+
+        $salasBase = collect(range(1, 6))->map(function ($i) {
+            return 'SALA ' . str_pad($i, 2, '0', STR_PAD_LEFT);
+        });
+
+        $cirugiasEnSala = Solicitud::where('estado', 'E')
+            ->whereNotNull('sala_operacion')
+            ->where(function ($q) use ($hoy) {
+                $q->whereDate('fecha_inicio', $hoy)
+                    ->orWhereDate('fecha_programada', $hoy);
+            })
+            ->orderBy('hora_inicio', 'asc')
+            ->get()
+            ->keyBy('sala_operacion');
+
+        return view('cirugias.salas', compact(
+            'salasBase',
+            'cirugiasEnSala',
+            'hoy'
+        ));
+    }
 }

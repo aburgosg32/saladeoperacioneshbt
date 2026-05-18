@@ -42,7 +42,7 @@ class EjecucionCirugiaController extends Controller
 
     public function iniciar($id)
     {
-        $cirugia = \App\Models\Solicitud::findOrFail($id);
+        $cirugia = Solicitud::findOrFail($id);
 
         if ($cirugia->estado !== 'P') {
             return redirect()
@@ -56,7 +56,7 @@ class EjecucionCirugiaController extends Controller
                 ->with('error', 'No se puede iniciar la operación porque no tiene sala asignada.');
         }
 
-        $salaOcupada = \App\Models\Solicitud::whereDate('fecha_programada', $cirugia->fecha_programada)
+        $salaOcupada = Solicitud::whereDate('fecha_programada', $cirugia->fecha_programada)
             ->where('sala_operacion', $cirugia->sala_operacion)
             ->where('estado', 'E')
             ->where('id', '!=', $cirugia->id)
@@ -66,6 +66,29 @@ class EjecucionCirugiaController extends Controller
             return redirect()
                 ->route('ejecucion-cirugias.index', ['fecha' => $cirugia->fecha_programada])
                 ->with('error', 'No se puede iniciar la operación porque la ' . $cirugia->sala_operacion . ' ya está ocupada por otra cirugía en curso.');
+        }
+
+        $medico = trim($cirugia->cirujano_principal ?? '');
+
+        if ($medico !== '') {
+            $medicoOcupado = Solicitud::where('estado', 'E')
+                ->where('id', '!=', $cirugia->id)
+                ->whereNotNull('cirujano_principal')
+                ->whereRaw('UPPER(TRIM(cirujano_principal)) = ?', [mb_strtoupper($medico)])
+                ->first();
+
+            if ($medicoOcupado) {
+                return redirect()
+                    ->route('ejecucion-cirugias.index', ['fecha' => $cirugia->fecha_programada])
+                    ->with(
+                        'error',
+                        'No se puede iniciar la operación. El médico ' .
+                            $medico .
+                            ' ya está operando en ' .
+                            ($medicoOcupado->sala_operacion ?? 'otra sala') .
+                            '.'
+                    );
+            }
         }
 
         $cirugia->update([
@@ -85,7 +108,7 @@ class EjecucionCirugiaController extends Controller
 
         if ($cirugia->estado !== 'E') {
             return redirect()
-                ->route('ejecucion-cirugias.index')
+                ->route('ejecucion-cirugias.index', ['fecha' => $cirugia->fecha_programada])
                 ->with('error', 'Solo se puede culminar una operación en curso.');
         }
 
@@ -105,7 +128,7 @@ class EjecucionCirugiaController extends Controller
             'estado' => 'C',
             'fecha_culminacion' => $fechaFin,
             'hora_culminacion' => $horaFin,
-            'tiempo_real' => $duracion, // opcional si tienes campo
+            'tiempo_real' => $duracion,
         ]);
 
         return redirect()

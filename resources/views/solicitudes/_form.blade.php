@@ -521,6 +521,12 @@ $esEdicion = isset($solicitud);
 </div>
 @enderror
 
+@error('programacion_conflicto')
+<div class="server-error">
+    {{ $message }}
+</div>
+@enderror
+
 <div class="paper">
     <div class="paper-head">
         <div>

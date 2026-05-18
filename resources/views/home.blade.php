@@ -298,6 +298,26 @@
             </div>
             @endcan
 
+            @can('paneltv.ver')
+            <div class="or-card">
+                <h4>
+                    Monitor de Salas
+                    <span class="or-badge ok">Activo</span>
+                </h4>
+
+                <p>
+                    Visualización de las 6 salas de operaciones en pantalla completa.
+                    Muestra paciente, operación, médico y hora de inicio por cada sala.
+                </p>
+
+                <div class="or-actions">
+                    <a class="or-btn or-btn-primary" href="{{ route('cirugias.salas') }}">
+                        Abrir módulo
+                    </a>
+                </div>
+            </div>
+            @endcan
+
             @can('panel.ver')
             <div class="or-card">
                 <h4>

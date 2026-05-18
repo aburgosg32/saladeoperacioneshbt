@@ -7,9 +7,6 @@ use Illuminate\Http\Request;
 
 class SolicitudController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $query = Solicitud::query();
@@ -56,41 +53,29 @@ class SolicitudController extends Controller
         return view('solicitudes.index', compact('solicitudes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         return view('solicitudes.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $mensajes = [
             'tipo_solicitud.required' => 'Debe seleccionar el tipo de solicitud.',
             'tipo_solicitud.in' => 'El tipo de solicitud no es válido.',
-
             'intervencion.in' => 'La intervención debe ser 1ra, 2da o 3ra.',
-
             'para_el_dia.required' => 'Debe ingresar la fecha para la cirugía.',
             'para_el_dia.date' => 'La fecha para la cirugía no tiene un formato válido.',
-
             'a_horas.required' => 'Debe ingresar la hora solicitada.',
-
             'servicio.required' => 'Debe ingresar el servicio.',
             'n_historia.required' => 'Debe ingresar el número de historia clínica.',
             'paciente.required' => 'Debe ingresar o buscar el paciente.',
             'edad.required' => 'Debe ingresar la edad del paciente.',
             'edad.integer' => 'La edad debe ser un número entero.',
-
             'codigo_diagnostico.required' => 'Debe ingresar el código de diagnóstico CIE10.',
             'diagnostico.required' => 'Debe ingresar el diagnóstico.',
             'codigo_operacion.required' => 'Debe ingresar el código de operación CPT.',
             'operacion.required' => 'Debe ingresar la operación.',
-
             'cirujano_principal.required' => 'Debe ingresar el cirujano principal.',
             'tiempo_operativo_aprox.required' => 'Debe ingresar el tiempo operativo aproximado.',
             'posicion_paciente.required' => 'Debe ingresar la posición del paciente.',
@@ -153,6 +138,7 @@ class SolicitudController extends Controller
             ->route('solicitudes.index')
             ->with('ok', 'Solicitud creada correctamente.');
     }
+
     private function validarConflictoPersonal(array $data, $idExcluir = null)
     {
         $fecha = $data['para_el_dia'] ?? null;
@@ -176,7 +162,7 @@ class SolicitudController extends Controller
             return null;
         }
 
-        $query = \App\Models\Solicitud::where('para_el_dia', $fecha)
+        $query = Solicitud::where('para_el_dia', $fecha)
             ->where('a_horas', $hora);
 
         if ($idExcluir) {
@@ -209,27 +195,70 @@ class SolicitudController extends Controller
         return null;
     }
 
-    /**
-     * Display the specified resource.
-     */
+    private function validarConflictoProgramacion(array $data, $idExcluir = null)
+    {
+        $fecha = $data['fecha_programada'] ?? null;
+        $hora = $data['hora_programada'] ?? null;
+        $sala = trim($data['sala_operacion'] ?? '');
+        $medico = trim($data['cirujano_principal'] ?? '');
+
+        if (!$fecha || !$hora || !$sala) {
+            return null;
+        }
+
+        $salaOcupada = Solicitud::whereDate('fecha_programada', $fecha)
+            ->where('hora_programada', $hora)
+            ->where('sala_operacion', $sala)
+            ->whereIn('estado', ['P', 'E'])
+            ->when($idExcluir, fn($q) => $q->where('id', '!=', $idExcluir))
+            ->first();
+
+        if ($salaOcupada) {
+            return "No se puede programar. La {$sala} ya está asignada el {$fecha} a las {$hora} para otra cirugía.";
+        }
+
+        if ($medico !== '') {
+            $medicoProgramado = Solicitud::whereDate('fecha_programada', $fecha)
+                ->where('hora_programada', $hora)
+                ->whereIn('estado', ['P', 'E'])
+                ->whereNotNull('cirujano_principal')
+                ->when($idExcluir, fn($q) => $q->where('id', '!=', $idExcluir))
+                ->whereRaw('UPPER(TRIM(cirujano_principal)) = ?', [mb_strtoupper($medico)])
+                ->first();
+
+            if ($medicoProgramado) {
+                return "No se puede programar. El médico {$medico} ya está asignado el {$fecha} a las {$hora} en " .
+                    ($medicoProgramado->sala_operacion ?? 'otra sala') . ".";
+            }
+
+            $medicoEnCurso = Solicitud::where('estado', 'E')
+                ->whereNotNull('cirujano_principal')
+                ->when($idExcluir, fn($q) => $q->where('id', '!=', $idExcluir))
+                ->whereRaw('UPPER(TRIM(cirujano_principal)) = ?', [mb_strtoupper($medico)])
+                ->first();
+
+            if ($medicoEnCurso) {
+                return "No se puede programar. El médico {$medico} actualmente está operando en " .
+                    ($medicoEnCurso->sala_operacion ?? 'otra sala') . ".";
+            }
+        }
+
+        return null;
+    }
+
     public function show($id)
     {
-        $solicitud = \App\Models\Solicitud::findOrFail($id);
+        $solicitud = Solicitud::findOrFail($id);
 
         return view('solicitudes.show', compact('solicitud'));
     }
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit($id)
     {
         $solicitud = Solicitud::findOrFail($id);
         return view('solicitudes.edit', compact('solicitud'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $solicitud = Solicitud::findOrFail($id);
@@ -272,13 +301,21 @@ class SolicitudController extends Controller
                 ->withErrors(['personal_conflicto' => $conflicto])
                 ->withInput();
         }
-        // Si la jefa programó la cirugía
+
         if (
             $request->filled('fecha_programada') &&
             $request->filled('hora_programada') &&
             $request->filled('sala_operacion')
         ) {
-            $data['estado'] = 'P'; // Programado
+            $conflictoProgramacion = $this->validarConflictoProgramacion($data, $solicitud->id);
+
+            if ($conflictoProgramacion) {
+                return back()
+                    ->withErrors(['programacion_conflicto' => $conflictoProgramacion])
+                    ->withInput();
+            }
+
+            $data['estado'] = 'P';
         }
 
         $solicitud->update($data);
@@ -286,9 +323,6 @@ class SolicitudController extends Controller
         return redirect()->route('solicitudes.index')
             ->with('ok', 'Solicitud actualizada.');
     }
-    /**
-     * Remove the specified resource from storage.
-     */
 
     public function culminar($id)
     {
@@ -315,6 +349,7 @@ class SolicitudController extends Controller
             ->route('solicitudes.index')
             ->with('ok', 'Operación culminada correctamente.');
     }
+
     public function destroy($id)
     {
         $solicitud = Solicitud::findOrFail($id);
